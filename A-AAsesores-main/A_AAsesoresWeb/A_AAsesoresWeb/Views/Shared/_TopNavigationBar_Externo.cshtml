@@ -1,0 +1,24 @@
+﻿<div class="topbar-main">
+    <!-- Logo container-->
+    <div class="logo">
+        <!-- Image Logo for large screens -->
+        <a href="@Url.Action("Index", "Dashboard")" class="logo d-none d-sm-block">
+            <!-- Oculta el enlace en pantallas extra pequeñas (menos de 576px) -->
+            <img src="~/assets/images/logo.png" alt="" height="45" class="logo-large">
+            <img src="~/assets/images/A&A Asesores.png" alt="" height="30" class="logo-large"> <!-- Añade margen a la imagen pequeña para separarlas un poco en pantallas grandes -->
+        </a>
+        <!-- Image Logo for small screens -->
+        <a href="@Url.Action("Index", "Dashboard")" class="logo d-block ">
+            <!-- Oculta el enlace en pantallas pequeñas y más grandes -->
+            <img src="~/assets/images/logo.png" alt="" height="50" class="logo-small">
+        </a>
+    </div>
+    <!-- End Logo container-->
+
+    <div class="menu-extras topbar-custom">
+        <!-- Aquí puedes agregar elementos adicionales como menús, botones, etc. -->
+    </div>
+    <!-- end menu-extras -->
+
+    <div class="clearfix"></div>
+</div>

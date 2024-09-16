@@ -1,0 +1,877 @@
+﻿@model A_AAsesoresWeb.Entities.MaintenanceEnt
+
+@{
+    ViewBag.Title = "MaintenanceList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/assets/custom/css/reportsStyles.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="page-title-box">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <div class="mr-2">
+                        <div class="round">
+                            <i class="fa fa-book"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mt-0 mb-0" style="color: black;">Mantenimientos Generales</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link tablinks card active" onclick="openTab(event, 'tab1')">Roles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab2')">Estados</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab3')">Tipos de propiedades</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab4')">Tipos de transaccion</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab5')">Tipos de documento</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab6')">Provincias</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab7')">Cantones</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab8')">Distritos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab9')">Habitaciones</a>
+        </li>
+    </ul>
+
+    <div class="card">
+        <div id="tab1" class="tabcontent" style="display: block;">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddRole", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar Rol</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons1" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Rol</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.Roles != null)
+                            {
+                                foreach (var item in Model.Roles)
+                                {
+                                    <tr>
+                                        <td>@item.RoleName</td>
+                                        <td>@item.Description</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("UpdateRole", "Maintenance", new { q = item.Id })"></a>
+                                            <a href="@Url.Action("ChangeRoleStatus", "Maintenance", new { q = item.Id })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado del rol"></a>
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="tabcontent">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddStatus", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar Estado</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons2" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Nombre del Estado</th>
+                                <th>Descripcion</th>
+                                <th>Módulo relacionado</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.Status != null)
+                            {
+                                foreach (var item in Model.Status)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.RelatedTable</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("UpdateStatus", "Maintenance", new { q = item.ID })"></a>
+                                            <a href="@Url.Action("ChangeStatusStatus", "Maintenance", new { q = item.ID })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado del rol"></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab3" class="tabcontent">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddPropertyType", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar Tipo de propiedad</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons3" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Tipo de propiedad</th>
+                                <th>Descripcion</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.PropertyType != null)
+                            {
+                                foreach (var item in Model.PropertyType)
+                                {
+                                    <tr>
+                                        <td>@item.Type</td>
+                                        <td>@item.Description</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("UpdatePropertyType", "Maintenance", new { q = item.Id })"></a>
+                                            <a href="@Url.Action("ChangePropertyTypeStatus", "Maintenance", new { q = item.Id })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado del rol"></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab4" class="tabcontent">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddTransactionType", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar Tipo de transacción</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons4" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Tipo de transacción</th>
+                                <th>Descripcion</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.TransactionType != null)
+                            {
+                                foreach (var item in Model.TransactionType)
+                                {
+                                    <tr>
+                                        <td>@item.Type</td>
+                                        <td>@item.Description</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("UpdateTransactionType", "Maintenance", new { q = item.Id })"></a>
+                                            <a href="@Url.Action("ChangeTransactionTypesStatus", "Maintenance", new { q = item.Id })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado del rol"></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab5" class="tabcontent">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddDocumentType", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar Tipo de documento</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons5" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Tipo de documento</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.DocumentType != null)
+                            {
+                                foreach (var item in Model.DocumentType)
+                                {
+                                    <tr>
+                                        <td>@item.Document</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("UpdateDocumentType", "Maintenance", new { q = item.ID })"></a>
+                                            <a href="@Url.Action("ChangeDocumentTypeStatus", "Maintenance", new { q = item.ID })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado del rol"></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab6" class="tabcontent">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddProvince", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar Provincia</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons6" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Provincia</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.Province != null)
+                            {
+                                foreach (var item in Model.Province)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("UpdateProvince", "Maintenance", new { q = item.Id })"></a>
+                                            <a href="@Url.Action("ChangeProvinceStatus", "Maintenance", new { q = item.Id })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado del rol"></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="tab7" class="tabcontent">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddCanton", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar Canton</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons7" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Canton</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.Canton != null)
+                            {
+                                foreach (var item in Model.Canton)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("EditCantonSP", "Maintenance", new { q = item.Id })"></a>
+                                            <a href="@Url.Action("ChangeCantonStatus", "Maintenance", new { q = item.Id })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado del rol"></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab8" class="tabcontent">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddDistrict", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar Distrito</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons8" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Distrito</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.District != null)
+                            {
+                                foreach (var item in Model.District)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("EditDistrictSP", "Maintenance", new { q = item.Id })"></a>
+                                            <a href="@Url.Action("ChangeDistrictStatus", "Maintenance", new { q = item.Id })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado del rol"></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        @*Tab habitaciones*@
+        <div id="tab9" class="tabcontent">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="@Url.Action("AddRoom", "Maintenance")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar habitación</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable-buttons9" class="table table-bordered table-striped mb-0">
+                        <thead class="text-center">
+                            <tr>
+                                <th>Habitación</th>
+                                <th>Estado</th>
+                                <th>Mantenimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @if (Model.District != null)
+                            {
+                                foreach (var item in Model.Room)
+                                {
+                                    <tr>
+                                        <td>@item.RoomName</td>
+                                        <td>@(item.IsActive == true ? "Habilitado" : "Deshabilitado")</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Actualizar" href="@Url.Action("EditRoom", "Maintenance", new { q = item.Id })"></a>
+                                            <a href="@Url.Action("ChangeRoomStatus", "Maintenance", new { q = item.Id })" class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Cambiar estado de la habitacíón."></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3">No se encontraron datos.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+@section scripts{
+    <!-- DataTables CSS -->
+    <link href="~/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- DataTables JS -->
+    <script src="~/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/jszip.min.js"></script>
+    <script src="~/assets/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/assets/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.colVis.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+
+    <script>
+        $(function () {
+            document.getElementById("tab1").style.display = "block";
+            document.getElementsByClassName("tablinks")[0].classList.add("active");
+        });
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Ocultar todas las pestañas
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Quitar la clase "active" de todos los enlaces de pestañas
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            // Agregar la clase "active" al enlace de pestaña actual
+            evt.currentTarget.classList.add("active");
+
+            // Mostrar el contenido de la pestaña actual
+            var currentTab = document.getElementById(tabName);
+            currentTab.style.display = "block";
+        }
+    </script>
+
+    <!-- DataTable init js -->
+    <script>
+        $(document).ready(function () {
+            $('#datatable-buttons1').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+
+            $('#datatable-buttons2').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+
+            $('#datatable-buttons3').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+
+            $('#datatable-buttons4').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+
+            $('#datatable-buttons5').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+
+            $('#datatable-buttons6').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+
+            $('#datatable-buttons7').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+
+            $('#datatable-buttons8').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+
+
+        });
+
+        $('#datatable-buttons9').DataTable({
+            responsive: true,
+            dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copiar'
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV'
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel'
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF'
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir'
+                },
+            ],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            }
+        });
+    </script>
+
+    <script>
+    // Función para poblar los datos del modal de actualización
+        function populateUpdateRoleModal(button) {
+            var roleId = $(button).data('role-id');
+            var roleName = $(button).closest('tr').find('td:eq(0)').text().trim();
+            var description = $(button).closest('tr').find('td:eq(1)').text().trim();
+            var isActive = $(button).closest('tr').find('td:eq(2)').text().trim() === 'Habilitado' ? 'true' : 'false';
+
+            $('#roleId').val(roleId);
+            $('#roleName').val(roleName);
+            $('#description').val(description);
+            $('#isActive').val(isActive);
+
+            $('#updateRoleModal').modal('show');
+        }
+        function updateRole() {
+            // Obtener los valores del formulario
+            var roleId = $('#roleId').val();
+            var roleName = $('#roleName').val();
+            var description = $('#description').val();
+            var isActive = $('#isActive').val();
+
+            // Enviar los datos al controlador mediante AJAX
+            $.ajax({
+                url: '@Url.Action("UpdateRole", "Maintenance")',
+                type: 'POST',
+                data: { Id: roleId, RoleName: roleName, Description: description, IsActive: isActive },
+                success: function (response) {
+                    // Manejar la respuesta del controlador
+                    if (response.success) {
+                        // Mostrar mensaje de éxito
+                        alert(response.message);
+                        // Cerrar el modal
+                        $('#updateRoleModal').modal('hide');
+                        // Actualizar la tabla o recargar la página si es necesario
+                        // Por ejemplo, puedes recargar la página usando: window.location.reload();
+                    } else {
+                        // Mostrar mensaje de error si la actualización falla
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    // Manejar errores de la solicitud AJAX
+                    alert("Error al enviar la solicitud de actualización.");
+                }
+            });
+        }
+
+    </script>
+}

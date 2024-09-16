@@ -1,0 +1,290 @@
+﻿@model List<A_AAsesoresWeb.Entities.NewsEnt>
+
+@{
+    ViewBag.Title = "FrequentQuestions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    :root {
+        --primary-color: #00204a;
+        --secondary-color: #005555;
+        --overlay-color: rgba(0, 0, 0, 0.5);
+        --text-color: #fff;
+        --font-size-heading: clamp(1.5rem, 2.5vw, 2.5rem);
+        --font-size-lead: 14px;
+        --padding-input: 18px;
+        --border-radius-input: 30px;
+        --max-width-placeholder: 250px;
+        --max-height-placeholder: 250px;
+        --max-width-news-img: 150px;
+        --max-height-news-img: 150px;
+        --description-max-height: 150px;
+    }
+
+    .hero {
+        position: relative;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-color: var(--primary-color);
+        height: auto;
+        min-height: 300px;
+    }
+
+        .hero.overlay:before {
+            background-color: var(--overlay-color);
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            z-index: 1;
+        }
+
+        .hero > .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero .heading {
+            color: var(--text-color);
+            font-size: var(--font-size-heading);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .hero .lead {
+            color: var(--text-color);
+            font-size: var(--font-size-lead);
+            margin-bottom: 30px;
+        }
+
+        .hero .narrow-w {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero .form-search .form-control {
+            padding: var(--padding-input);
+            border: none;
+            border-radius: var(--border-radius-input);
+            margin-right: 10px;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .hero .form-search .btn {
+            background-color: var(--secondary-color);
+            padding-left: 30px;
+            padding-right: 30px;
+            color: var(--text-color);
+            outline: none;
+            box-shadow: none;
+        }
+
+    .img-about img,
+    .img-fluid {
+        position: relative;
+        z-index: 2;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .img-about.dots:after {
+        position: absolute;
+        z-index: 1;
+        bottom: -50px;
+        right: -70px;
+        content: "";
+        width: 412px;
+        height: 220px;
+        background: url("/assets/images/dots.png") no-repeat;
+    }
+
+    .description-container {
+        overflow-wrap: break-word;
+        padding: 10px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        /* No centra el texto */
+        text-align: left;
+    }
+
+    .img-placeholder {
+        max-width: var(--max-width-placeholder);
+        max-height: var(--max-height-placeholder);
+        display: block; /* Asegura que la imagen ocupe su espacio */
+        margin: 0 auto; /* Centra la imagen dentro del contenedor */
+    }
+
+    .img-news {
+        max-width: var(--max-width-news-img);
+        max-height: var(--max-height-news-img);
+        display: block; /* Asegura que la imagen ocupe su espacio */
+        margin: 0 auto; /* Centra la imagen dentro del contenedor */
+    }
+
+    /* Ajuste dinámico para las tarjetas */
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Asegura que el contenido ocupe el espacio del card */
+        height: 100%;
+        border: 1px solid #ddd; /* Opcional: borde para las tarjetas */
+        border-radius: 8px; /* Opcional: bordes redondeados */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Opcional: sombra para tarjetas */
+    }
+
+    .card-body {
+        flex-grow: 1;
+    }
+
+    /* Ajuste para que todas las tarjetas tengan la misma altura */
+    .col-sm-4, .col-md-4, .col-lg-4 {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .list-group-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: none; /* Opcional: elimina el borde si usas el borde del card */
+        box-shadow: none; /* Opcional: elimina la sombra si usas la del card */
+    }
+</style>
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box"></div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="hero page-inner overlay" style="background-image: url('/assets/images/hero_bg_3.jpg');">
+            <div class="container">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-lg-9 text-center mt-5">
+                        <h1 class="heading" style="color: white;">Blog Informativo</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center align-items-center">
+        <div class="col-lg-9 text-center mt-5"></div>
+    </div>
+
+    <div class="container-fluid mb-4">
+        <div class="row justify-content-between align-items-center">
+            <!-- Contenedor del título y el icono -->
+            <div class="col-md-6">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <!-- Sección para el título y el icono si es necesario -->
+                </div>
+            </div>
+
+            <!-- Contenedor del buscador -->
+            <div class="col-md-6">
+                <div class="row justify-content-end">
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Buscar...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="d-flex flex-wrap">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <div class="col-sm-4 col-md-4 col-lg-4 d-flex align-items-stretch mb-5">
+                                <div class="card list-group-item w-100">
+                                    <div class="text-center">
+                                        <h4 class="mt-0 mb-0">
+                                            @item.Title
+                                        </h4>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            @if (string.IsNullOrEmpty(item.ImageUrl))
+                                            {
+                                                <img src="~/Content/Images/placeholder.png" alt="Imagen no disponible" class="img-fluid img-placeholder">
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content(item.ImageUrl)" alt="@item.Title" class="img-fluid img-news">
+                                            }
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="card-body description-container">
+                                                <p>
+                                                    @Html.Raw(item.Description.Replace("\n", "<br/>"))
+                                                </p>
+                                                @if (!string.IsNullOrEmpty(item.Url))
+                                                {
+                                                    if (!string.IsNullOrEmpty(item.Url))
+                                                    {
+                                                        var url = item.Url.StartsWith("http://") || item.Url.StartsWith("https://")
+                                                                  ? item.Url
+                                                                  : "http://" + item.Url;
+
+                                                        <a href="@url" target="_blank" class="sticky-link">Leer más</a>
+                                                    }
+
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <!-- Espacio para más contenido si es necesario -->
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No hay noticias disponibles.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> <!-- Cierre para .container-fluid principal -->
+
+@section scripts {
+    <script src="~/assets/js/app.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.btn-link').click(function () {
+                var target = $(this).attr('data-target');
+                $(target).collapse('toggle');
+            });
+
+            $('input.form-control').on('input', function () {
+                var searchText = $(this).val().toLowerCase();
+                $('.list-group-item').each(function () {
+                    var title = $(this).find('h4').text().toLowerCase();
+                    var description = $(this).find('.card-body').text().toLowerCase();
+                    $(this).toggle(title.includes(searchText) || description.includes(searchText));
+                });
+            });
+        });
+    </script>
+}
+    

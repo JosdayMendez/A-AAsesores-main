@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<!-- Plantilla para solicitud de contacto de un cliente -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de contacto de @@Name @@FirstLastName</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #000;
+            font-weight: bold;
+        }
+
+        strong {
+            font-size: 20px;
+        }
+
+        .header-footer {
+            background-color: #ffcc00;
+            color: #000;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .details-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-footer">
+        <strong>A&amp;A Asesores Inmobiliarios</strong>
+    </div>
+    <div class="details-container">
+        <h2>Detalles del Cliente:</h2>
+        <table>
+            <tr>
+                <th>Nombre:</th>
+                <td>@@Name @@FirstLastName</td>
+            </tr>
+            <tr>
+                <th>Identificación:</th>
+                <td>@@Identification</td>
+            </tr>
+            <tr>
+                <th>Correo Electrónico:</th>
+                <td>@@Email</td>
+            </tr>
+            <tr>
+                <th>Teléfono:</th>
+                <td>@@PhoneNumber</td>
+            </tr>
+        </table>
+    </div>
+    <div class="header-footer">
+        <strong>A&amp;A Asesores Inmobiliarios</strong>
+    </div>
+</body>
+</html>

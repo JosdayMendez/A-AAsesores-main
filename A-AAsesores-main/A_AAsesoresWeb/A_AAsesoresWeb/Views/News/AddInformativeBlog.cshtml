@@ -1,0 +1,159 @@
+﻿@model A_AAsesoresWeb.Entities.NewsEnt
+
+@{
+    ViewBag.Title = "Agregar Noticia";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group pull-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Blog Informativo</a></li>
+                            <li class="breadcrumb-item active">Agregar</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title end breadcrumb -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card mx-auto m-b-30">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center my-3">
+                        <div class="text-center mr-2">
+                            <div class="round">
+                                <i class="fa fa-plus-circle"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mt-0 mb-0">Agregar Nueva Noticia</h3>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("AddInformativeBlog", "News", FormMethod.Post, new { @class = "bg-white p-5 contact-form", @enctype = "multipart/form-data", id = "FrequentQuestionsForm" }))
+                    {
+                        @Html.HiddenFor(m => m.EmployeeId)
+
+                        <div class="form-group">
+                            <label for="NewsEnt_Title">Título de la Noticia</label>
+                            @Html.TextAreaFor(m => m.Title, new { @class = "form-control", @rows = "2", @placeholder = "Ingrese el título de la noticia", id = "NewsEnt_Title" })
+                            <span class="text-danger" id="NewsEnt_Title-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NewsEnt_Description">Descripción de la Noticia</label>
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @rows = "5", @placeholder = "Ingrese la descripción de la noticia", id = "NewsEnt_Description" })
+                            <span class="text-danger" id="NewsEnt_Description-error"></span>
+                        </div>
+
+                        <!--Cargar campo de URL-->
+
+                        <div class="form-group">
+                            <label for="NewsEnt_Title">Enlace de la noticia</label>
+                            @Html.TextAreaFor(m => m.Url, new { @class = "form-control", @rows = "2", @placeholder = "", id = "NewsEnt_Title" })
+                            <span class="text-danger" id="NewsEnt_Title-error"></span>
+                        </div>
+                        <!-- Campo para cargar la imagen -->
+                        <div class="form-group">
+                            <label for="imageFile">Imagen de la Noticia</label>
+                            <div class="custom-file">
+                                <input type="file" name="imageFile" id="imageFile" class="custom-file-input" accept="image/*" />
+                                <label class="custom-file-label" for="imageFile">Seleccionar archivo</label>
+                            </div>
+                            <!-- Vista previa de la imagen -->
+                            <div id="imagePreview" style="margin-top: 10px;">
+                                <img id="previewImage" src="#" alt="Vista previa de la imagen" style="display: none; max-width: 20%; height: auto;">
+                            </div>
+                        </div>
+
+                        <div class="text-right">
+                            <a href="@Url.Action("InformativeBlogAdmin", "News")" class="btn btn-secondary waves-effect m-l-5" data-toggle="tooltip" data-placement="top" title="Cancelar">Cancelar</a>
+                            <button type="submit" class="btn btn-primary waves-light" data-toggle="tooltip" data-placement="top" title="Agregar">Agregar Noticia</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div> <!-- end row -->
+</div> <!-- end container -->
+
+@section scripts {
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+    <!-- jQuery -->
+
+    <!-- Parsley.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#FrequentQuestionsForm').parsley();
+
+            // Función para mostrar la vista previa de la imagen
+            $('#imageFile').change(function (event) {
+                var input = event.target;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#previewImage').attr('src', e.target.result).show();
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $('#previewImage').hide();
+                }
+
+                // Mostrar el nombre del archivo en la etiqueta personalizada
+                var fileName = input.files[0].name;
+                $(this).next('.custom-file-label').html(fileName);
+            });
+
+            $("#FrequentQuestionsForm").submit(function (event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var responseParts = response.message.split("|");
+                        var notificationType = responseParts[1];
+                        var notificationMessage = responseParts[0];
+
+                        Swal.fire({
+                            title: notificationType === 'success' ? 'Éxito' : 'Error',
+                            text: notificationMessage,
+                            icon: notificationType,
+                            confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                            if (result.isConfirmed && notificationType === 'success') {
+                                window.location.href = '@Url.Action("InformativeBlogAdmin", "News")';
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Error al agregar la noticia. Inténtelo nuevamente.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+

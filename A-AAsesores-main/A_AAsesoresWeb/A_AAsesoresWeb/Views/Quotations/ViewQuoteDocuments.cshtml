@@ -1,0 +1,272 @@
+﻿@model A_AAsesoresWeb.Entities.QuoteEnt
+@{
+    ViewBag.Title = "ViewQuoteDocuments";
+}
+
+<link href="~/assets/plugins/morris/morris.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<link href="~/assets/plugins/dropify/css/dropify.min.css" rel="stylesheet">
+
+
+<div class="container-fluid mb-4">
+
+</div>
+
+<div class="container-fluid">
+    <div class="text-center row justify-content-center">
+        <div class="col-lg-6">
+            <section>
+                <div class="container-fluid mb-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="text-center mr-2">
+                            <div class="round">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mt-0 round-inner mb-0"> Documento de la Cotizacion</h3>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model == null || !Model.StringList.Any())
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card m-b-30">
+                                <div class="card-body">
+                                    <div class="card-body">
+                                        <h4 class="mt-0 header-title">No hay documentos para la cotizacion seleccionada.</h4>
+                                    </div>
+                                    <div class="d-flex justify-content-center mb-1">
+                                        <a href="@Url.Action("ViewQuotations", "Quotations")" class="btn btn-secondary waves-effect m-l-5" style="margin-right: 3px;">Volver</a>
+                                        <button id="btnOpenModal" type="button" class="btn btn-primary">
+                                            Agregar documento
+                                        </button>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end row -->
+                }
+                else
+                {
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card m-b-30">
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Archivo</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var fileName in Model.StringList)
+                                            {
+                                                <tr>
+                                                    <td>@fileName</td>
+                                                    <td>
+                                                        <a href="@Url.Action("DownloadFile", "Quotations", new { fileName = fileName, q = ViewBag.QuoteId })" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Descargar">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                        <button type="button" class="btn btn-danger  fa fa-trash" data-toggle="tooltip" data-placement="top" title="Eliminar documento" onclick="confirmDelete('@Model.Id', '@fileName')"></button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end row -->
+
+                }
+            </section>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel" style="font-size: 1.5rem;">Agregar un documento</h1>
+                        </div>
+                        <div class="modal-body">
+                            <section>
+                                <form id="upload-form" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        @Html.HiddenFor(m => m.Id)
+                                        <label for="Docs">Documentos</label>
+                                        @Html.TextBoxFor(m => m.Docs, new { @class = "dropify", @type = "file", @id = "input-file-now" })
+                                    </div>
+                                    <input type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Agregar archivo" value="Cargar archivo">
+                                    <a href="@Url.Action("ViewQuotations", "Quotations")" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Ver cotizaciones">Ver cotizaciones</a>
+                                </form>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Error message -->
+            <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
+        </div>
+    </div>
+</div> <!-- end container -->
+@section scripts{
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+
+    <!-- Dropzone js -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="~/assets/plugins/dropify/js/dropify.min.js"></script>
+
+    <!-- Toastr js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Archivos CSS de Bootstrap -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Archivos JavaScript de Bootstrap (jQuery es requerido) -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Escuchar el evento de clic en el botón
+            $('#btnOpenModal').click(function () {
+                // Abrir el modal
+                $('#exampleModal').modal('show');
+            });
+        });
+    </script>
+    <script>
+$(document).ready(function () {
+   $('.dropify').dropify();
+     $("#upload-form").submit(function (event) {
+         event.preventDefault();
+         var formData = new FormData($(this)[0]);
+         $.ajax({
+             type: "POST",
+             url: "@Url.Action("AddPropertyDoc", "Quotations", new { q = ViewBag.QuoteId })",
+             data: formData,
+             contentType: false,
+             processData: false,
+             success: function (response) {
+                 if (response.success) {
+                     Swal.fire({
+                         icon: 'success',
+                         title: 'Archivo cargado con éxito',
+                         timerProgressBar: true,
+                         onClose: () => {
+                             setTimeout(function () {
+                                 window.location.href = '@Url.Action("ViewQuoteDocuments", "Quotations", new { q = ViewBag.QuoteId })';
+                             });
+                         }
+                     });
+                 } else {
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'Error al cargar el archivo',
+                         text: response.message,
+                         onClose: () => {
+                             window.location.reload();
+                         }
+                     });
+                 }
+             },
+             error: function () {
+                 Swal.fire({
+                     icon: 'error',
+                     title: 'Error al cargar el archivo',
+                     text: 'Se produjo un error al cargar el archivo.',
+                     onClose: () => {
+                         window.location.reload();
+                     }
+                 });
+             }
+         });
+     });
+});
+
+    </script>
+    <script>
+function confirmDelete(Id, fileName) {
+    //console.log(Id);
+    //console.log(fileName);
+    //var employeeId = '@Session["IdTEmployee"]';
+
+    //if (!employeeId || employeeId === '0') {
+        //window.location.href = '@Url.Action("LoginEmployee", "Employee")';
+        //return;
+    //}
+
+    Swal.fire({
+        title: 'Confirmar eliminación',
+        text: '¿Está seguro de que desea eliminar este documento?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Cancelar',
+        allowOutsideClick: false,
+        allowEscapeKey: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteItem(Id, fileName);
+        }
+    });
+}
+
+        function deleteItem(Id, fileName) {
+            console.log(Id);
+            console.log(fileName);
+    $.ajax({
+        url: '@Url.Action("DeleteDoc", "Quotations")',
+        type: 'POST',
+        data: { q: Id, fileName: fileName },
+
+            success: function (response) {
+            var responseParts = response.message.split("|");
+                if (response.success) {
+                    Swal.fire({
+                        title: "Éxito",
+                        text: responseParts[0],
+                        icon: responseParts[1],
+                        confirmButtonText: "Aceptar",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '@Url.Action("ViewQuoteDocuments", "Quotations")' + '?q=' + response.property;
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: responseParts[0],
+                        icon: responseParts[1],
+                        confirmButtonText: "Aceptar",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    title: "Error",
+                    text: "Se produjo un error al intentar eliminar el documento.",
+                    icon: "error",
+                    confirmButtonText: "Aceptar",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+    });
+}
+    </script>
+
+}

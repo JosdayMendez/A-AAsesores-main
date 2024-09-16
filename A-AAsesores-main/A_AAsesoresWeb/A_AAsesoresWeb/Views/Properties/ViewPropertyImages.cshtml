@@ -1,0 +1,338 @@
+﻿@model A_AAsesoresWeb.Entities.PropertyEnt
+
+@{
+    ViewBag.Title = "ViewPropertyImages";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- DataTables -->
+<link href="~/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<!-- Responsive datatable examples -->
+<link href="~/assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<link href="~/assets/plugins/dropify/css/dropify.min.css" rel="stylesheet">
+<!-- Required for modal-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+<div class="container-fluid">
+
+    <div class="row align-items-center">
+       <div class="col-sm-6">
+           <div class="page-title-box">
+               <div class="d-flex justify-content-start align-items-center my-3">
+                   <div class="mr-2">
+                       <div class="round">
+                           <i class="fa fa-image"></i>
+                       </div>
+                   </div>
+                   <div>
+                       <h3 class="mt-0 mb-0">Administración de imágenes</h3>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <div class="col-sm-6 text-right">
+           <!-- Button trigger modal -->
+           <div class="d-flex justify-content-end mb-3">
+               <a href="@Url.Action("ListProperties", "Properties")" class="btn btn-secondary waves-effect m-l-5" style="margin-right: 3px;">Volver</a>
+               <button type="button" class="btn btn-primary waves-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                   Agregar imagen
+               </button>
+           </div>
+       </div>
+   </div>
+
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card-body">
+                <div>
+                    <div class="row">
+                        @foreach (var item in Model.ImagesInfo)
+                        {
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                                <div class="card m-b-30">
+                                    <img src="@item.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                                    <div class="card-body" style="text-align: end;">
+                                        <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Ver imagen" onclick="openFile('@item.ImageUrl')"><i class="fa fa fa-eye"></i> Ver</button>
+                                        <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar imagen" onclick="confirmDelete('@item.Id', '@Model.Id')"><i class="fa fa-trash"></i> Eliminar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end container -->
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="font-size: 1.5rem;">Agregar una imagen</h1>
+            </div>
+            <div class="modal-body">
+
+                @using (Html.BeginForm("AddPropertyImg", "Properties", FormMethod.Post, new { @class = "bg-white contact-form", @enctype = "multipart/form-data", @id = "ImageForm" }))
+                {
+                    @Html.HiddenFor(m => m.Id)
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.Images, new { @class = "dropify", @type = "file", @id = "input-file-now-img", accept = "image/jpeg, image/png", })
+                                </div>
+                                <div class="text-right">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <input type="submit" class="btn btn-primary waves-light" value="Guardar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div> <!-- end modal -->
+<!-- File modal -->
+<div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="fileModalLabel">Vista de imágenes</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="fileViewer" style="width: 100%; height: 500px; background-size: cover;" frameborder="0"></iframe>
+            </div>
+            <div class="modal-footer">
+                <a id="downloadLink" href="#" class="btn btn-success" download>Descargar</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <!-- Required datatable js -->
+    <script src="~/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Buttons examples -->
+    <script src="~/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/jszip.min.js"></script>
+    <script src="~/assets/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/assets/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.colVis.min.js"></script>
+    <!-- Responsive examples -->
+    <script src="~/assets/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/assets/plugins/datatables/responsive.bootstrap4.min.js"></script>
+    <!-- Dropzone js -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="~/assets/plugins/dropify/js/dropify.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="~/assets/pages/datatables.init.js"></script>
+
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#datatable-buttons').DataTable();
+            // Translated
+            $('.dropify').dropify({
+                messages: {
+                    default: 'Arrastra y suelta un archivo aquí o haz clic',
+                    replace: 'Arrastra y suelta o haz clic para reemplazar',
+                    remove: 'Eliminar',
+                    error: 'Se produjo un error al cargar el archivo'
+                }
+            });
+
+            // Used events
+            var drEvent = $('#input-file-events').dropify();
+
+            drEvent.on('dropify.beforeClear', function (event, element) {
+                return confirm("¿Realmente quiere eliminar \"" + element.file.name + "\" ?");
+            });
+
+            drEvent.on('dropify.afterClear', function (event, element) {
+                alert('Archvio eliminado');
+            });
+
+            drEvent.on('dropify.errors', function (event, element) {
+                console.log('Has Errors');
+            });
+
+            var drDestroy = $('#input-file-to-destroy').dropify();
+            drDestroy = drDestroy.data('dropify')
+            $('#toggleDropify').on('click', function (e) {
+                e.preventDefault();
+                if (drDestroy.isDropified()) {
+                    drDestroy.destroy();
+                } else {
+                    drDestroy.init();
+                }
+            })
+        });
+    </script>
+
+    <script>
+        document.getElementById('input-file-now-img').addEventListener('change', function (event) {
+            const files = event.target.files;
+            const allowedTypes = ['image/jpeg', 'image/png'];
+
+            for (let i = 0; i < files.length; i++) {
+                if (!allowedTypes.includes(files[i].type)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Este tipo de archivo no es permitido.',
+                        text: 'Solo se permiten archivos JPG o PNG.',
+                    });
+                    event.target.value = ''; // Limpiar el campo de entrada
+                    break;
+                }
+            }
+        });
+
+        $("#ImageForm").submit(function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: formData,
+            processData: false, // No procesar los datos
+            contentType: false,
+            success: function (response) {
+                var responseParts = response.message.split("|");
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: responseParts[0],
+                        icon: responseParts[1],
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            if (response.property) {
+                                // Redireccionar a la vista con el objeto property
+                                window.location.href = '@Url.Action("ViewPropertyImages", "Properties")' + '?q=' + response.property; // Asegúrate de ajustar el parámetro 'id' según tu ruta de acción
+                            }
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: responseParts[0],
+                        icon: responseParts[1],
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al agregar la imagen.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+            });
+        });
+    </script>
+    <script>
+        function confirmDelete(itemId, modelId) {
+            console.log(itemId);
+            console.log(modelId);
+            //var employeeId = '@Session["IdTEmployee"]';
+
+            //if (!employeeId || employeeId === '0') {
+                //window.location.href = '@Url.Action("LoginEmployee", "Employee")';
+                //return;
+            //}
+
+            Swal.fire({
+                title: 'Confirmar eliminación',
+                text: '¿Está seguro de que desea eliminar esta imagen?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Eliminar',
+                cancelButtonText: 'Cancelar',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteItem(itemId, modelId);
+                }
+            });
+        }
+
+        function deleteItem(itemId, modelId) {
+            $.ajax({
+                url: '@Url.Action("DeletePropertyImg", "Properties")',
+                type: 'POST',
+                data: { q: itemId, p: modelId },
+                    success: function (response) {
+                    var responseParts = response.message.split("|");
+                        if (response.success) {
+                            Swal.fire({
+                                title: "Éxito",
+                                text: responseParts[0],
+                                icon: responseParts[1],
+                                confirmButtonText: "Aceptar",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '@Url.Action("ViewPropertyImages", "Properties")' + '?q=' + response.property;
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: responseParts[0],
+                                icon: responseParts[1],
+                                confirmButtonText: "Aceptar",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Se produjo un error al intentar eliminar la imagen.",
+                            icon: "error",
+                            confirmButtonText: "Aceptar",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        });
+                    }
+            });
+        }
+
+        function openFile(imageUrl) {
+            //var filePath = '@Url.Action("ViewFile", "Properties")?q=' + itemId + '&p=' + modelId;
+            //console.log(filePath);
+            $("#fileViewer").css("background-image", "url('" + imageUrl + "')");
+            $("#downloadLink").attr("href", imageUrl);
+            $("#fileModal").modal("show");
+        }
+    </script>
+}

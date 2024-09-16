@@ -1,0 +1,152 @@
+﻿@model A_AAsesoresWeb.Entities.EmployeeEnt
+@{
+    Layout = "~/Views/Shared/_Layout_Externo.cshtml";
+    ViewBag.Title = "Login";
+}
+
+<div class="accountbg"></div>
+<!-- Begin page -->
+<div class="wrapper-page">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="text-center mt-0 m-b-15">
+                <!-- Logo container-->
+                <div>
+                    <!-- Eliminada la clase logo -->
+                    <!-- Image Logo for large screens -->
+                    <a href="@Url.Action("Index", "Dashboard")" class="logo d-none d-md-block">
+                        <!-- Oculta el enlace en pantallas extra pequeñas y medianas -->
+                        <img src="~/assets/images/logo.png" alt="" height="45" class="logo-large">
+                        <img src="~/assets/images/A&A Asesores.png" alt="" height="30" class="logo-small"> <!-- Corregido: Cambiado a logo-small para pantallas pequeñas -->
+                    </a>
+                    <!-- Image Logo for small screens -->
+                    <a href="@Url.Action("Index", "Dashboard")" class="logo d-block d-md-none">
+                        <!-- Se muestra en pantallas pequeñas (576px - 620px) y se oculta en pantallas más grandes -->
+                        <img src="~/assets/images/logo.png" alt="" height="50" class="logo-small">
+                    </a>
+                </div>
+                <!-- End Logo container-->
+            </h3>
+            <div class="p-3">
+                @if (ViewBag.MensajeUsuario != null)
+                {
+                    <div class="alert alert-danger" role="alert" style="text-align:center">
+                        @ViewBag.MensajeUsuario
+                    </div>
+                }
+                @using (Html.BeginForm("LoginEmployee", "Employee", FormMethod.Post, new { id = "LoginEmpleado", data_parsley_validate = "true" }))
+                {
+                    <div class="form-group">
+                        <label>Número de identificación</label>
+                        @Html.TextBoxFor(m => m.Identification, new { @class = "form-control", @type = "text", @placeholder = "00-0000-0000", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_pattern = "\\d{2}-\\d{4}-\\d{4}", @data_parsley_error_message = "Por favor, ingrese el número de identificación." })
+                        <span class="text-danger" id="Identification-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label> <!-- Corregido: Cerrado el label -->
+                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password", @placeholder = "Contraseña", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Por favor, ingrese la contraseña" })
+                        <span class="text-danger" id="Password-error"></span>
+                    </div>
+                    <div class="form-group text-center">
+                        <input type="submit" class="btn btn-primary btn-block waves-light" value="Iniciar sesión">
+                    </div>
+                    <div class="form-group text-center m-t-20">
+                        <a href="@Url.Action("ForgetPassword", "Employee")" class="text-muted"><small>¿Olvidó su contraseña?</small></a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <!-- App js -->
+    <script src="~/Utilities/LoginForm-Validation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/assets/js/app.js"></script>
+    <script>
+        $(document).ready(function () {
+        $('#LoginEmpleado').parsley();
+
+        $('#LoginEmpleado').submit(function (event) {
+            event.preventDefault();
+
+            // Verificar si el formulario es válido
+            if ($(this).parsley().isValid()) {
+                var formData = new FormData(this);
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    processData: false, // No procesar los datos
+                    contentType: false,
+                    success: function (response) {
+                        var responseParts = response.message.split("|");
+                        if (response.success) {
+                            if (responseParts[1] === 'warning') {
+                                Swal.fire({
+                                    title: 'Información',
+                                    text: responseParts[0],
+                                    icon: responseParts[1],
+                                    confirmButtonText: 'Aceptar',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '@Url.Action("ResetPassword", "Employee")';
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Éxito',
+                                    text: responseParts[0],
+                                    icon: responseParts[1],
+                                    confirmButtonText: 'Aceptar',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false
+                                }).then((result) => {
+                                    // Redireccionar al usuario a una página de destino apropiada después del éxito
+                                    window.location.href = '/Dashboard/Index'; // Por ejemplo, redirige a la página de inicio
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: responseParts[0],
+                                icon: responseParts[1],
+                                confirmButtonText: 'Aceptar',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'No se puedo realizar el inicio de sesión.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        });
+                    }
+                });
+            } else {
+                // Mostrar mensaje de error indicando que el formulario no es válido
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Por favor, complete todos los campos correctamente.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+        });
+    });
+
+    </script>
+
+}

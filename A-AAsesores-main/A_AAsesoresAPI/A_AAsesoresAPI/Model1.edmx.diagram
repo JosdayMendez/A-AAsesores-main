@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="933a0363248c4aee968814fc630dc724" Name="Diagram1">
+        <EntityTypeShape EntityType="AAAsesoresModel.Appointment" Width="1.5" PointX="3" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.AuditLog" Width="1.5" PointX="5.25" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Canton" Width="1.5" PointX="6" PointY="28.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Contact" Width="1.5" PointX="6" PointY="15.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Currency" Width="1.5" PointX="6" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.District" Width="1.5" PointX="8.25" PointY="28.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.DocumentType" Width="1.5" PointX="1.5" PointY="23.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Employee" Width="1.5" PointX="3" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.ErrorLog" Width="1.5" PointX="5.25" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.News" Width="1.5" PointX="5.25" PointY="19.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Property" Width="1.5" PointX="8.25" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.PropertyAddress" Width="1.5" PointX="10.5" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.PropertyDoc" Width="1.5" PointX="10.5" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.PropertyImg" Width="1.5" PointX="10.5" PointY="17.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.PropertyType" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Province" Width="1.5" PointX="3.75" PointY="28.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Quote" Width="1.5" PointX="3" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.QuoteDetailsPerRoom" Width="1.5" PointX="5.25" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.QuoteRooms" Width="1.5" PointX="3" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Role" Width="1.5" PointX="0.75" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Status" Width="1.5" PointX="0.75" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.TransactionType" Width="1.5" PointX="6" PointY="25.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.Users" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AAAsesoresModel.VirtualAssistant" Width="1.5" PointX="2.75" PointY="1.875" IsExpanded="true" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Appointment_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Appointment_Property" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Appointment_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Appointment_User" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Audit_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Canton_Province" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_District_Canton" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Contact_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Contact_User" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Property_Currency" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_PropertyAddress_District" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Users_DocumentType" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Employee_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Employee_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Employee_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_ErrorLog_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_News_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Property_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Property_PropertyType" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Property_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Property_Transactiontype" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_PropertyAddress_Property" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_PropertyDoc_Property" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_PropertyImg_Property" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Quote_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_Quote_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_QuoteDetailsPerRoom_Quote" ManuallyRouted="false" />
+        <AssociationConnector Association="AAAsesoresModel.FK_QuoteDetailsPerRoom_QuoteRooms" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

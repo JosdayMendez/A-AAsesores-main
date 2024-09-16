@@ -1,0 +1,190 @@
+﻿
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/assets/custom/css/reportsStyles.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="page-title-box">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <div class="mr-2">
+                        <div class="round">
+                            <i class="fa fa-book"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mt-0 mb-0" style="color: black;">Reportes del sistema</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pestañas del menú de tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab1')">Propiedades</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab2')">Usuarios</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab3')">Cotizaciones</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tablinks card" onclick="openTab(event, 'tab4')">Citas</a>
+        </li>
+    </ul>
+    @*Contenido para cada una de las cards*@
+    <div class="card">
+        <div id="tab1" class="tabcontent">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="barsByPrice" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="barsPropertyByMonthOfYear" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="piePropertyByStatus" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="piePropertyByType" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="doughnutByProvince" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="doughnutByTransactonType" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="lineEarningsByMonthOnPresentYear" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="tabcontent">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="barsPropertiesByEmployee" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="barsClientsByMonth" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="pieEmployeesByStatus" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="pieEmployeesByRole" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab3" class="tabcontent">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="barsQuotationsByMonth" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="pieQuotesByStatus" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab4" class="tabcontent">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="barsPendingAppointmentsByEmployee" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="appointmentsByProperty" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="appointmentsByCreationAndAttention" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="card-body">
+                        <div>
+                            <canvas id="pieAppointmentsByStatus" style="width: 100%; height: 40vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/Utilities/Js/Reports.js"></script>
+}

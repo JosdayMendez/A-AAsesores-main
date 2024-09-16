@@ -1,0 +1,216 @@
+﻿@model List<A_AAsesoresWeb.Entities.NewsEnt>
+
+@{
+    ViewBag.Title = "FrequentQuestionsAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["notification"] != null)
+{
+    <div class="alert alert-info">@Html.Raw(TempData["notification"])</div>
+}
+
+<div class="container-fluid">
+    <div class="row align-items-center">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <div class="mr-2">
+                        <div class="round">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mt-0 mb-0">Blog Informativo</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="d-flex justify-content-end align-items-center my-3">
+                <a href="@Url.Action("InformativeBlog", "News")" class="btn btn-secondary waves-effect m-l-5" style="margin-right: 3px;">Volver</a>
+                <a href="@Url.Action("AddInformativeBlog", "News")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar una noticia</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido de la tabla -->
+    <div class="row">
+        <div class="col-sm-12">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title text-primary">No hay noticias disponibles.</h4>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="datatable-buttons" class="table table-bordered table-striped mb-0" style="width: 100%;">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Título</th>
+                                        <th>Descripción</th>
+                                        <th>Enlace de la noticia</th>
+                                        <th>Imagen</th>
+                                        <th>Mantenimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="text-center">
+                                            <td>@item.Title</td>
+                                            <td>@item.Description</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Url))
+                                                {
+                                                   @item.Url
+                                                }
+                                                else
+                                                {
+                                                    <span>Sin URL</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                                {
+                                                    <img src="@Url.Content(item.ImageUrl)" alt="@item.Title" class="img-fluid" style="max-width: 100px; max-height: 100px;">
+                                                }
+                                                else
+                                                {
+                                                    <span>No image available</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <!-- Botones para editar información y actualizar imagen -->
+                                                <a type="button" class="btn btn-success fa fa-pencil" data-toggle="tooltip" data-placement="top" title="Editar Información" href="@Url.Action("UpdateInformativeBlog", "News", new { id = item.Id })"></a>
+                                                <a type="button" class="btn btn-warning fa fa-image" data-toggle="tooltip" data-placement="top" title="Actualizar Imagen" href="@Url.Action("UpdateNewsImage", "News", new { id = item.Id })"></a>
+                                                <button type="button" class="btn btn-danger fa fa-trash" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="confirmDelete('@item.Id')"></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <!-- DataTables CSS -->
+    <link href="~/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- DataTables JS -->
+    <script src="~/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/jszip.min.js"></script>
+    <script src="~/assets/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/assets/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.colVis.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+
+    <!-- DataTables Responsive -->
+    <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <link href="~/assets/custom/css/DatatableIcons.css" rel="stylesheet" />
+
+    <!-- DataTables Init -->
+    <script>
+        $(document).ready(function() {
+            // Inicializamos la tabla principal
+            var table = $('#datatable-buttons').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+        });
+
+        function confirmDelete(itemId) {
+            var employeeId = '@Session["IdTEmployee"]';
+
+            if (!employeeId || employeeId === '0') {
+                window.location.href = '@Url.Action("LoginEmployee", "Employee")';
+                return;
+            }
+
+            Swal.fire({
+                title: 'Confirmar Eliminación',
+                text: '¿Estás seguro de que deseas eliminar este elemento?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteItem(itemId);
+                }
+            });
+        }
+
+        function deleteItem(itemId) {
+            $.post('@Url.Action("DeleteInformativeBlog", "News")', { id: itemId })
+                .done(function (response) {
+                    Swal.fire({
+                        title: "Éxito",
+                        text: "El elemento se eliminó correctamente.",
+                        icon: "success",
+                        confirmButtonText: "Aceptar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '@Url.Action("InformativeBlogAdmin", "News")';
+                        }
+                    });
+                })
+                .fail(function () {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al eliminar el elemento.",
+                        icon: "error",
+                        confirmButtonText: "Aceptar"
+                    });
+                });
+        }
+    </script>
+}

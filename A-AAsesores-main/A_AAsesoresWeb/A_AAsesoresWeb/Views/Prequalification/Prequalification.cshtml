@@ -1,0 +1,143 @@
+﻿@model List<string>
+
+@{
+    ViewBag.Title = "Prequalification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/assets/plugins/morris/morris.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<link href="~/assets/plugins/dropify/css/dropify.min.css" rel="stylesheet">
+
+<!-- Page-Title -->
+<div class="container-fluid mb-4">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="btn-group pull-right">
+             
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end page title end breadcrumb -->
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                        <div class="col-10 align-self-center">
+                            <div class="m-l-12 text-left">
+                                <!-- Alineación a la izquierda -->
+                                <h3 class="mt-0 round-inner" style="color: #b89531; text-align: center;">
+                                    Precalificaciones
+                                </h3>
+                                <hr>
+                                <p class="mb-0 text-muted" style="font-size: 16px; line-height: 1.6; color: #6c757d;">
+                                    <!-- Ajustar tamaño, espaciado, color y justificación del texto -->
+                                    La precalificación bancaria en el ámbito inmobiliario es un proceso crucial antes de la compra de una propiedad.
+                                    <hr>
+                                    Este procedimiento implica evaluar las opciones ofrecidas por distintas entidades financieras para obtener una hipoteca o préstamo.
+                                    <hr>
+                                    Al comprender su situación crediticia y las condiciones disponibles, el cliente puede tomar decisiones informadas que se ajusten mejor a sus necesidades y capacidades financieras, lo que garantiza una inversión sólida y bien planificada.
+                                    <hr>
+                                    La precalificación bancaria también actúa como un filtro preventivo, ayudando a evitar posibles rechazos de solicitudes de préstamos hipotecarios y contratiempos financieros en el futuro.
+                                    <hr>
+                                    Además, al obtener una visión clara de las condiciones y términos ofrecidos por las entidades financieras, los clientes pueden negociar de manera más efectiva y garantizar que la transacción inmobiliaria se realice de manera fluida y exitosa.
+                                    <hr>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        <h3 class="mt-0 round-inner" style="color: #b89531; text-align: center;">
+                            Archivos Disponibles
+                        </h3>
+                        <hr>
+                        <div class="mt-4">
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="col-12">
+                                    <ul class="list-unstyled">
+                                        @foreach (var fileName in Model)
+                                        {
+                                            <li>
+                                                <div class="d-flex flex-row justify-content-center align-items-center">
+                                                    <div class="col-1 align-self-center"></div>
+                                                    <div class="col-11 align-self-center ml-2">
+                                                        <a href="@Url.Action("DownloadFile", "Prequalification", new { fileName = fileName })" class="file-link">
+                                                            <span class="file-name">@fileName</span>
+                                                            <hr>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center ">
+                            <a href="@Url.Action("DownloadAllFiles", "Prequalification")" class="btn btn-success btn-sm" data-toggle="tooltip" title="Descargar Todos">
+                                <i class="fa fa-download"></i> Descargar
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No hay archivos disponibles.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+
+    <!-- Dropzone js -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="~/assets/plugins/dropify/js/dropify.min.js"></script>
+
+    <!-- Toastr js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('.dropify').dropify();
+
+            $("#upload-form").submit(function (event) {
+                event.preventDefault();
+
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UploadFile", "Prequalification")",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Error al cargar el archivo.");
+                    }
+                });
+            });
+        });
+    </script>
+}

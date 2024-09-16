@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "AddPrequalification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Resto del contenido de la vista -->
+
+<link href="~/assets/plugins/morris/morris.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<link href="~/assets/plugins/dropify/css/dropify.min.css" rel="stylesheet">
+
+<div class="card-body">
+
+</div>
+
+
+<div class="container-fluid">
+    <div class="text-center row justify-content-center">
+        <div class="col-lg-6">
+            <section>
+                <!-- Formulario de carga de archivos -->
+                <form id="upload-form" enctype="multipart/form-data">
+
+
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="text-center mr-2">
+                            <div class="round">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mt-0 round-inner mb-0">Agregar Documento</h3>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Docs"></label>
+                        <input type="file" class="dropify" id="Docs" name="archivo" multiple="multiple" />
+                    </div>
+                    <a href="@Url.Action("PrequalificationAdmin", "Prequalification")" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Ver documentos">Ver documentos</a>
+                    <input type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Agregar archivo" value="Cargar archivo">
+                </form>
+            </section>
+        </div>
+    </div>
+</div> <!-- end container -->
+
+
+@section scripts{
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+
+    <!-- Dropzone js -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="~/assets/plugins/dropify/js/dropify.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <!-- Toastr js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+   $(document).ready(function () {
+      $('.dropify').dropify();
+        $("#upload-form").submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData($(this)[0]);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UploadFile", "Prequalification")",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Archivo cargado con éxito',
+                            timerProgressBar: true,
+                            onClose: () => {
+                                setTimeout(function () {
+                                    window.location.href = '@Url.Action("PrequalificationAdmin", "Prequalification")';
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al cargar el archivo',
+                            text: response.message,
+                            onClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al cargar el archivo',
+                        text: 'Se produjo un error al cargar el archivo.',
+                        onClose: () => {
+                            window.location.reload();
+                        }
+                    });
+                }
+            });
+        });
+   });
+
+    </script>
+
+}

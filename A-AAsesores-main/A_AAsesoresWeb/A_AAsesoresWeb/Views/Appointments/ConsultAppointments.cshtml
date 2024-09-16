@@ -1,0 +1,148 @@
+﻿@model List<A_AAsesoresWeb.Entities.AppointmentEnt>
+@{
+    ViewBag.Title = "ConsultAppointments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="row align-items-center">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <div class="mr-2">
+                        <div class="round">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mt-0 mb-0">Listado Citas</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.MensajeUsuario != null)
+    {
+        <div style="justify-content: center !important;">
+            <h5>@ViewBag.MensajeUsuario</h5>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="datatable-buttons" class="table table-bordered table-striped mb-0" style="width: 100%;">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Identificaión del cliente</th>
+                                        <th>Nombre del cliente</th>
+                                        <th>Teléfono del cliente</th>
+                                        <th>Dirección de correo del cliente</th>
+                                        <th>Fecha y hora de la visita</th>
+                                        <th>Visita la propiedad</th>
+                                        <th>Empleado Asigando</th>
+                                        <th>Estado</th>
+                                        <th>Mantenimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="text-center">
+                                            <td>@item.IdentificationUser</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.Phonenumber</td>
+                                            <td><a href="mailto:@item.Email">@item.Email</a></td>
+                                            <td>@(item.AppointmentDate != null? item.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt") : "No disponible")</td>
+                                            <td>@item.PropertyName</td>
+                                            <td>@(item.EmployeeName != null ? item.EmployeeName : "Por asignar")</td>
+                                            <td style="text-align:center; background-color:@(item.Status == 9 ? "#d4edda" : item.Status == 10 ? "#F5A3A6" : item.Status == 11 ? "#D1F1F5" : "#fff3cd")">
+                                                @item.StatusName
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("ChangeAppointmentStatus","Appointments", new {q = item.Id})"><i class="btn btn-info fa fa-arrows-h" data-toggle="tooltip" data-placement="top" title="Permite cambiar el estado de la cita de Por aceptar o cancelada."></i></a>
+                                                <a href="@Url.Action("UpdateAppointment","Appointments", new {q = item.Id})"><i class="btn btn-secondary fa fa-edit" data-toggle="tooltip" data-placement="top" title="Permite asigar y cambiar el estado de la cita."></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    }
+</div> <!-- end container -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@section scripts{
+    <!-- DataTables CSS -->
+    <link href="~/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- DataTables JS -->
+    <script src="~/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/jszip.min.js"></script>
+    <script src="~/assets/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/assets/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.colVis.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+
+    <!-- DataTables Responsive -->
+    <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <link href="~/assets/custom/css/DatatableIcons.css" rel="stylesheet" />
+
+    <!-- DataTables Init -->
+    <script>
+        $(document).ready(function () {
+            // Inicializamos la tabla principal
+            var table = $('#datatable-buttons').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+        });
+    </script>
+}
+

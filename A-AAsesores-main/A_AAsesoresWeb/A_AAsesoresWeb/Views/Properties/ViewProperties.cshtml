@@ -1,0 +1,267 @@
+﻿@model A_AAsesoresWeb.Models.ViewPropertiesModel
+
+@{
+    ViewBag.Title = "ViewProperties";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Sliders -->
+<link href="~/assets/plugins/ion-rangeslider/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/plugins/ion-rangeslider/ion.rangeSlider.skinModern.css" rel="stylesheet" type="text/css" />
+
+<style>
+    .title {
+        color: #212529;
+    }
+</style>
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="d-flex justify-content-start align-items-center my-3">
+                <div class="mr-2">
+                    <div class="round">
+                        <i class="fa fa-home"></i>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="mt-0 mb-0" style="color: black;">Propiedades Disponibles</h3>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section" style="padding-top: 0rem !important">
+        <div class="row">
+            <div class="col-xs-12 col-md-3 col-lg-3 m-b-20" id="filterPanel">
+                <div class="d-md-none mb-3 text-right">
+                    <!-- Botón para mostrar/ocultar el menú en pantallas pequeñas -->
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse" id="toggleFiltersButton">
+                        Mostrar filtros
+                    </button>
+                </div>
+
+                <div class="collapse d-md-block" id="filterCollapse">
+                    @using (Html.BeginForm("FilterProperties", "Properties", FormMethod.Post, new { @id = "filterForm", @style = "background-color: #ffffff;" }))
+                    {
+                        <div class="card-body">
+                            <div>
+                                <h5 class="title">Filtrar propiedades</h5>
+                            </div>
+                            <div>
+                                <div class="input-group mt-2">
+                                    @Html.TextBoxFor(m => m.Filter.SearchText, new { @class = "form-control", @type = "text", @placeholder = "Buscar" })
+                                </div>
+                            </div>
+                            @*<div>
+                                <label class="col-form-label title">Rango de precios</label>
+                                @Html.TextBoxFor(m => m.Filter.RangePrice, new { @type = "text", @id = "range_03" })
+                            </div>*@
+                            <div>
+                                <label class="col-form-label title">Tipo de propiedad</label>
+                                <div>
+                                    @foreach (var type in Model.PropertyTypeViewModels)
+                                    {
+                                        string checkboxId = "propertyType_" + @type.PropertyType;
+                                        <div class="checkbox my-2">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="@checkboxId" name="PropertyTypes" data-parsley-mincheck="2" value="@type.PropertyType">
+                                                <label class="custom-control-label" for="@checkboxId">@type.PropertyTypeName</label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div>
+                                <label class="col-form-label title">Tipo de transacción</label>
+                                <div>
+                                    @foreach (var type in Model.TransactionTypeViewModels)
+                                    {
+                                        string checkboxId = "transactionType_" + @type.TransactionType;
+                                        <div class="checkbox my-2">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="@checkboxId" name="TransactionTypes" data-parsley-mincheck="2" value="@type.TransactionType">
+                                                <label class="custom-control-label" for="@checkboxId">@type.TransactionTypeName</label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div>
+                                <label class="col-form-label title">Provincia</label>
+                                <div>
+                                    @foreach (var province in Model.ProvinceViewModels)
+                                    {
+                                        string checkboxId = "province_" + @province.ProvinceId;
+                                        <div class="checkbox my-2">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="@checkboxId" name="Provinces" data-parsley-mincheck="2" value="@province.ProvinceId">
+                                                <label class="custom-control-label" for="@checkboxId">@province.ProvinceName</label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="reset" class="btn btn-secondary" id="resetFilters">Limpiar Filtros</button>
+                                <button type="submit" class="btn btn-primary">Filtrar</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-9" id="propertyListContainer">
+                <!--Esto carga lo filtrado-->
+                @Html.Partial("_PropertyListPartial", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/assets/js/app.js"></script>
+    <script src="~/assets/plugins/ion-rangeslider/ion.rangeSlider.min.js"></script>
+    @*<script>
+        //function loadPricesSlider() {
+            var prices = [];
+            @foreach (var item in Model.Properties)
+            {
+                <text>prices.push(@item.Price);</text>
+            }
+            var minPrice = Math.min.apply(null, prices);
+            var maxPrice = Math.max.apply(null, prices);
+
+            // Configurar el slider con el precio máximo
+            $("#range_03").ionRangeSlider({
+                type: "double",
+                grid: true,
+                min: minPrice,
+                max: maxPrice,
+                from: minPrice,
+                to: maxPrice,
+                prefix: "$"
+            });
+
+            // Almacenar los valores iniciales del rango de precios en un objeto
+            var initialPrices = {
+                min: minPrice,
+                max: maxPrice
+            };
+
+            // Retornar los valores iniciales para que puedan ser usados más tarde
+            return initialPrices;
+        }
+    </script>*@
+    <script>
+        $(document).ready(function () {
+            //loadPricesSlider();
+            // Función para manejar la paginación AJAX y el filtrado
+            function loadPage(page) {
+                var formData = {
+                    "Filter.SearchText": $('#Filter_SearchText').val(),
+                    //"Filter.RangePrice": $('#range_03').val(),
+                    // Otros campos aquí
+                };
+                // Checkbox values
+                var propertyTypes = [];
+                $('input[name="PropertyTypes"]:checked').each(function() {
+                    propertyTypes.push($(this).val());
+                });
+                formData["Filter.PropertyTypes"] = propertyTypes;
+
+                var transactionTypes = [];
+                $('input[name="TransactionTypes"]:checked').each(function() {
+                    transactionTypes.push($(this).val());
+                });
+                formData["Filter.TransactionTypes"] = transactionTypes;
+
+                var provinces = [];
+                $('input[name="Provinces"]:checked').each(function() {
+                    provinces.push($(this).val());
+                });
+                formData["Filter.Provinces"] = provinces;
+
+                // Agregar la página al formData
+                formData["page"] = page;
+
+                // Realizar la solicitud AJAX
+                $.ajax({
+                    url: '@Url.Action("FilterProperties", "Properties")',
+                    type: 'POST',
+                    data: formData,
+                    success: function(result) {
+                        $('#propertyListContainer').html(result);
+                    },
+                    error: function() {
+                        alert("Ocurrió un error al cargar los datos.");
+                    }
+                });
+            };
+
+            $(document).on("click", "#resetFilters", function (e) {
+                e.preventDefault();
+
+                // Almacenar los valores de los campos que no deseas restablecer
+                //var rangePriceValue = $('#range_03').val(); // Campo de rango de precio
+
+                // Restablecer el formulario
+                $('#filterForm')[0].reset();
+
+                // Restaurar los valores de los campos que no deseas restablecer
+                //$('#range_03').val(rangePriceValue); // Restaurar el valor del campo de rango de precio
+
+                // Desmarcar todas las casillas de verificación
+                $('input[type="checkbox"]').prop('checked', false);
+
+                // Cargar los valores iniciales del rango de precios y reinicializar el slider
+                /*var initialPrices = loadPricesSlider();
+                $("#range_03").data("ionRangeSlider").update({
+                    from: initialPrices.min,
+                    to: initialPrices.max
+                });*/
+
+                loadPage(1); // Cargar la primera página después de restablecer los filtros
+            });
+
+            // Manejar clics en los números de página
+            $(document).on("click", ".page-number", function(e) {
+                e.preventDefault();
+                var page = $(this).data("page");
+                loadPage(page);
+            });
+
+            // Manejar clics en la página anterior
+            $(document).on("click", "#previousPage", function(e) {
+                e.preventDefault();
+                var currentPage = parseInt($('#CurrentPage').val());
+                if (currentPage > 1) {
+                    loadPage(currentPage - 1);
+                }
+            });
+
+            // Manejar clics en la página siguiente
+            $(document).on("click", "#nextPage", function(e) {
+                e.preventDefault();
+                var currentPage = parseInt($('#CurrentPage').val());
+                var totalPages = parseInt($('#TotalPages').val());
+                if (currentPage < totalPages) {
+                    loadPage(currentPage + 1);
+                }
+            });
+
+            // Manejar envío del formulario de filtro
+            $(document).on("submit", "#filterForm", function(e) {
+                e.preventDefault();
+                loadPage(1); // Cargar la primera página después de aplicar el filtro
+            });
+            //Maneja el menú colapsable en responsive
+            $('#filterCollapse').on('hidden.bs.collapse', function () {
+                $('#toggleFiltersButton').text('Mostrar filtros');
+            });
+
+            $('#filterCollapse').on('shown.bs.collapse', function () {
+                $('#toggleFiltersButton').text('Ocultar filtros');
+            });
+        });
+    </script>
+}

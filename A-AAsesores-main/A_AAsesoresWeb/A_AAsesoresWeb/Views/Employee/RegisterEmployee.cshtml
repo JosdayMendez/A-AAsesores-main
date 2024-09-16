@@ -1,0 +1,246 @@
+﻿@model A_AAsesoresWeb.Entities.MultiEnt
+@{
+    ViewBag.Title = "RegisterEmployee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Dropzone css -->
+<link href="~/assets/plugins/dropzone/dist/dropzone.css" rel="stylesheet" type="text/css">
+<link href="~/assets/plugins/dropify/css/dropify.min.css" rel="stylesheet">
+
+
+
+<div class="container-fluid">
+
+    <div class="row align-items-center">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <div class="mr-2">
+                        <div class="round">
+                            <i class="fa fa-user-plus"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mt-0 mb-0">Registrar Empleado</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    @if (ViewBag.MensajeUsuario != null)
+                    {
+                        <div class="alert alert-danger" role="alert" style="text-align:center">
+                            @ViewBag.MensajeUsuario
+                        </div>
+                    }
+                    @using (Html.BeginForm("RegisterEmployee", "Employee", FormMethod.Post, new { @class = "bg-white contact-form", @data_parsley_validate = "true", @id = "employeeForm", @enctype = "multipart/form-data" }))
+                    {
+                        @Html.HiddenFor(m => m.UserEnt.Id)
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="p-1">
+                                        <div class="form-group">
+                                            <label>Tipo de Identificación <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Selecciona el tipo de identificación del empleado (por ejemplo, cédula de ciudadanía, pasaporte, etc.)."></i> </label>
+                                            @Html.DropDownListFor(m => m.UserEnt.DocumentType, ViewBag.DocumentType as List<SelectListItem>, new { @class = "form-control", required = "required", @data_parsley_required = "true", @data_parsley_error_message = "Por favor, seleccione el tipo de identificación" })
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nombre</label>
+                                            @Html.TextBoxFor(m => m.UserEnt.Name, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Nombre", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Por favor, ingrese su nombre." })
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Dirección de Correo <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Ingresa la dirección de correo electrónico del empleado. Asegúrate de ingresar una dirección válida."></i> </label>
+                                            @Html.TextBoxFor(m => m.UserEnt.Email, new { @class = "form-control", @type = "email", @placeholder = "example@example.com", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_type = "email", @data_parsley_trigger = "change", @data_parsley_error_message = "Por favor, ingrese una dirección de correo electrónico válida." })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Rol <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Selecciona el rol o posición que ocupa el empleado en la organización."></i> </label>
+                                            @Html.DropDownListFor(m => m.EmployeeEnt.Role, ViewBag.ListRole as List<SelectListItem>, new { @class = "form-control", required = "required", @data_parsley_required = "true", @data_parsley_error_message = "Por favor, seleccione el rol del empleado." })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="p-1">
+                                        <div class="form-group">
+                                            <label>Número de identificación <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Ingresa el número de identificación del empleado. Utiliza el formato XX-XXXX-XXXX."></i> </label>
+                                            @Html.TextBoxFor(m => m.UserEnt.Identification, new { @class = "form-control", @onkeyup = "ConsultUserData()", @type = "text", @placeholder = "00-0000-0000", @style = "font-size:14px;", @data_parsley_required = "true", @readonly = "@readonly", @data_parsley_error_message = "Por favor, ingrese el número de identificación." })
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="FirstLastName">Primer Apellido</label>
+                                                    @Html.TextBoxFor(m => m.UserEnt.FirstLastName, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Primer Apellido", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Por favor, ingrese su primer apellido." })
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="SecondLastName">Segundo Apellido</label>
+                                                    @Html.TextBoxFor(m => m.UserEnt.SecondLastName, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Segundo Apellido", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Por favor, ingrese su segundo apellido." })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Teléfono <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Ingresa el número telefónico del empleado. Utiliza el formato XXXX-XXXX."></i> </label>
+                                            @Html.TextBoxFor(m => m.UserEnt.PhoneNumber, new { @class = "form-control", @type = "text", @placeholder = "8888-8888", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Por favor, ingrese el número telefónico." })
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label>Imagen de Perfil <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Selecciona o carga la imagen de perfil del empleado."></i> </label>
+                                            <input type="file" id="ImgProfile" name="ImgProfile" width: 300px class="dropify" data_parsley_required="true" accept="image/jpeg, image/png" />
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+                                <div class="col-12">
+                                    <div class="form-group text-right">
+                                        <a href="@Url.Action("ConsultEmployees", "Employee")" class="btn btn-secondary waves-effect m-l-5">Cancelar</a>
+                                        <input type="submit" class="btn btn-primary waves-light" value="Registrar Empleado">
+                                    </div>
+                                </div>
+
+                            </div> <!-- end row -->
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div> <!-- end container -->
+
+@section scripts {
+    <!-- JavaScript -->
+    <script src="~/Utilities/User-Funtions.js"></script>
+    <script src="~/Utilities/RegisterForm-Validation.js"></script>
+    <script src="~/assets/plugins/dropzone/dist/dropzone.js"></script>
+    <script src="~/assets/plugins/dropify/js/dropify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom Script -->
+    <script src="~/assets/js/app.js"></script>
+    <script>
+$(document).ready(function () {
+    // Inicializar Dropify con mensajes personalizados
+    $('.dropify').dropify({
+        messages: {
+            default: 'Arrastra y suelta un archivo aquí o haz clic',
+            replace: 'Arrastra y suelta o haz clic para reemplazar',
+            remove: 'Eliminar',
+            error: 'Se produjo un error al cargar el archivo'
+        },
+        height: 100
+    });
+
+    // Manejo de eventos Dropify
+    var drEvent = $('.dropify').dropify();
+    // Inicializar y destruir Dropify según el botón de alternancia
+    var drDestroy = $('#input-file-to-destroy').dropify().data('dropify');
+    $('#toggleDropify').on('click', function (e) {
+        e.preventDefault();
+        if (drDestroy.isDropified()) {
+            drDestroy.destroy();
+        } else {
+            drDestroy.init();
+        }
+    });
+
+    // Validar tipo de archivo antes de insertar con SweetAlert
+    $('#ImgProfile').on('change', function (event) {
+        var file = event.target.files[0];
+        if (file) {
+            var allowedTypes = ['image/jpeg', 'image/png'];
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Archivo no permitido',
+                    text: 'Solo se permiten archivos JPEG y PNG.',
+                }).then(() => {
+                    event.target.value = '';
+                    var drDestroy = $('.dropify').dropify();
+                    drDestroy = drDestroy.data('dropify');
+                    drDestroy.resetPreview();
+                    drDestroy.clearElement();
+                });
+            }
+        }
+    });
+
+    // Dropdown Tipo de Identificación
+    $('#UserEnt_DocumentType').change(function () {
+        var valorSeleccionado = $(this).val();
+        var $campo = $('#UserEnt_Identification');
+
+        if (valorSeleccionado == "1") {
+            $campo.val('').attr('readonly', false).mask('00-0000-0000');
+        } else if (valorSeleccionado == "2") {
+            $campo.val('').attr('readonly', false).mask('00-0000-0000-0000');
+        } else {
+            $campo.val('').attr('readonly', false).unmask();
+        }
+    });
+
+    // Máscaras para los campos de entrada
+    $('#UserEnt_PhoneNumber').mask('0000-0000');
+
+    // Validación del formulario con Parsley
+    $('#employeeForm').parsley();
+
+    // Envío del formulario a través de AJAX
+    $('#employeeForm').submit(function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                var responseParts = response.message.split("|");
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: responseParts[0],
+                        icon: responseParts[1],
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '@Url.Action("ConsultEmployees", "Employee")';
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: responseParts[0],
+                        icon: responseParts[1],
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al registrar el empleado. Por favor, inténtalo de nuevo.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+        });
+    });
+});
+    </script>
+}

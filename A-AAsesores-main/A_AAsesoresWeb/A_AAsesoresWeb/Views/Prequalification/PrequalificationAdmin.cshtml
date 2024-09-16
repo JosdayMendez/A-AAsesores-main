@@ -1,0 +1,231 @@
+﻿@{
+    ViewBag.Title = "PrecualificationAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["notification"] != null)
+{
+    @Html.Raw(TempData["notification"])
+}
+
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row align-items-center">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <div class="mr-2">
+                        <div class="round">
+                            <i class="fa fa-file-text"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mt-0 mb-0">Documentos disponibles</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="d-flex justify-content-end align-items-center my-3" style="float: right;">
+                <a href="@Url.Action("Prequalification", "Prequalification")" class="btn btn-secondary waves-effect m-l-5" style="margin-right: 3px;">Volver</a>
+                <a href="@Url.Action("AddPrequalification", "Prequalification")" class="btn btn-primary waves-effect m-l-5" style="margin-right: 3px;">Agregar un documento</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title">No hay archivos disponibles.</h4>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="datatable-buttons" class="table table-bordered table-striped mb-0" style="width: 100%;">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Documento</th>
+                                        <th>Mantenimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var fileName in Model)
+                                    {
+                                        <tr class="text-center">
+                                            <td><span>@fileName</span></td>
+                                            <td>
+                                                @*<button type="button" class="btn btn-success fa fa-eye" data-toggle="tooltip" data-placement="top" title="Ver documentos" onclick="openFile('@fileName')"></button>*@
+                                                <a type="button" class="btn btn-success fa fa-download" data-toggle="tooltip" data-placement="top" title="Descargar" href="@Url.Action("DownloadFile", "Prequalification", new { fileName = fileName })"></a>
+                                                <button type="button" class="btn btn-danger  fa fa-trash" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="confirmDelete('@fileName')"></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileModalLabel">Vista previa de archivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="fileViewer" width="100%" height="500px" frameborder="0"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <a id="downloadLink" href="#" class="btn btn-success">Descargar</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@section scripts{
+    <!-- DataTables CSS -->
+    <link href="~/assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- DataTables JS -->
+    <script src="~/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatables/jszip.min.js"></script>
+    <script src="~/assets/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/assets/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.colVis.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+
+    <!-- DataTables Responsive -->
+    <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <link href="~/assets/custom/css/DatatableIcons.css" rel="stylesheet" />
+
+    <script>
+
+        function openFile(fileName) {
+            var filePath = '@Url.Action("ViewFile", "Prequalification")?fileName=' + fileName;
+            $("#fileViewer").attr("src", filePath);
+            $("#downloadLink").attr("href", '@Url.Action("DownloadFile", "Prequalification")?fileName=' + fileName);
+            $("#fileModal").modal("show");
+        }
+
+        function confirmDelete(fileName) {
+
+            Swal.fire({
+                title: "Confirmar eliminación",
+                text: "¿Estás seguro de que quieres eliminar este archivo?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteFile(fileName);
+                }
+            });
+        }
+
+        function deleteFile(fileName) {
+            $.ajax({
+                url: '@Url.Action("DeleteFile", "Prequalification")',
+                type: 'POST',
+                data: { fileName: fileName },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: "Éxito",
+                            text: "Archivo eliminado correctamente.",
+                            icon: "success",
+                            confirmButtonText: "Aceptar"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Error al eliminar el archivo.",
+                            icon: "error",
+                            confirmButtonText: "Aceptar"
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error al eliminar el archivo.",
+                        icon: "error",
+                        confirmButtonText: "Aceptar"
+                    });
+                }
+            });
+        }
+
+
+    </script>
+    <!-- DataTable init js -->
+    <script>
+        $(document).ready(function () {
+            // Inicializamos la tabla principal
+            var table = $('#datatable-buttons').DataTable({
+                responsive: true,
+                dom: '<"row"<"col-sm-6"B><"col-sm-6"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copiar'
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    },
+                ],
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            })
+        });
+    </script>
+
+}

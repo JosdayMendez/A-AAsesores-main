@@ -1,0 +1,287 @@
+﻿@model A_AAsesoresWeb.Entities.EmployeeEnt
+@{
+    ViewBag.Title = "ProfileEmployee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Dropzone css -->
+<link href="~/assets/plugins/dropzone/dist/dropzone.css" rel="stylesheet" type="text/css">
+<link href="~/assets/plugins/dropify/css/dropify.min.css" rel="stylesheet">
+<div class="container-fluid">
+
+    <div class="row align-items-center">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <div class="mr-2">
+                        <div class="round">
+                            <i class="fa fa-pencil-square"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mt-0 mb-0">Actualizar Empleado</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    @if (ViewBag.MensajeUsuario != null)
+                    {
+                        <div class="alert alert-danger" role="alert" style="text-align:center">
+                            @ViewBag.MensajeUsuario
+                        </div>
+                    }
+                    @using (Html.BeginForm("UpdateEmployee", "Employee", FormMethod.Post, new { @class = "bg-white p-5 contact-form", @enctype = "multipart/form-data", data_parsley_validate = "true", id = "employeeForm" }))
+                    {
+                        @Html.HiddenFor(m => m.IdTEmployee)
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="p-1">
+                                        <div class="form-group">
+                                            <label>Tipo de Identificación <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Selecciona el tipo de identificación del empleado (por ejemplo, cédula de ciudadanía, pasaporte, etc.)."></i> </label>
+                                            @Html.DropDownListFor(m => m.DocumentType, ViewBag.ListDocumentType as List<SelectListItem>, new { @class = "form-control", @readonly = "true", @disabled = "disabled", @type = "text" })
+                                            @Html.HiddenFor(m => m.DocumentType)
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nombre</label>
+                                            @Html.TextBoxFor(m => m.Name, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Nombre", @style = "font-size:14px;" })
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Dirección de Correo <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Ingresa la dirección de correo electrónico del empleado. Asegúrate de ingresar una dirección válida."></i> </label>
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @type = "email", @placeholder = "example@example.com", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_type = "email", @data_parsley_trigger = "change", @data_parsley_error_message = "Por favor, ingrese una dirección de correo electrónico válida." })
+                                            <span class="text-danger" id="Email-error"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Rol <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Selecciona el rol o posición que ocupa el empleado en la organización."></i> </label>
+                                            @Html.DropDownListFor(m => m.Role, ViewBag.ListRole as List<SelectListItem>, new { @class = "form-control", @type = "text", @readonly = "readonly", @disabled = "disabled" })
+                                            @Html.HiddenFor(m => m.Role)
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Imagen de Perfil <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Selecciona o carga la imagen de perfil del empleado."></i> </label>
+                                            <input type="file" id="ImgProfile" name="ImgProfile" class="dropify" data-default-file="@Model.ImageProfile" accept="image/jpeg, image/png" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="p-1">
+                                        <div class="form-group">
+                                            <label>Número de identificación <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Ingresa el número de identificación del empleado. Utiliza el formato XX-XXXX-XXXX."></i> </label>
+                                            @Html.TextBoxFor(m => m.Identification, new { @readonly = "@readonly", @class = "form-control", @onkeyup = "ConsultarNombre()", @type = "text", @placeholder = "0-0000-0000" })
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="FirstLastName">Primer Apellido</label>
+                                                    @Html.TextBoxFor(m => m.FirstLastName, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Primer Apellido", @style = "font-size:14px;" })
+                                                    <span class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="SecondLastName">Segundo Apellido</label>
+                                                    @Html.TextBoxFor(m => m.SecondLastName, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Segundo Apellido", @style = "font-size:14px;" })
+                                                    <span class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Teléfono <i class="fa fa-info-circle fa-1x" data-toggle="tooltip" data-placement="top" title="Ingresa el número telefónico del empleado. Utiliza el formato XXXX-XXXX."></i> </label>
+                                            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @type = "text", @placeholder = "8888-8888", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_pattern = "\\d{4}-\\d{4}", @data_parsley_error_message = "Por favor, ingrese el número telefónico." })
+                                            <span class="text-danger" id="PhoneNumber-error"></span>
+                                        </div>
+                                        @Html.HiddenFor(m => m.Status)
+                                    </div>
+                                </div> <!-- end col -->
+                                <div class="col-12">
+                                    <div class="form-group text-right">
+                                        <a href="@Url.Action("ConsultEmployees", "Employee")" class="btn btn-secondary waves-effect m-l-5">Cancelar</a>
+                                        <input type="submit" class="btn btn-primary waves-light" value="Actualizar perfil">
+                                    </div>
+                                </div>
+
+                            </div> <!-- end row -->
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+</div> <!-- end container -->
+
+@section scripts{
+    <!-- Dropzone js -->
+    <script src="~/assets/plugins/dropzone/dist/dropzone.js"></script>
+    <script src="~/assets/plugins/dropify/js/dropify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+    <script>
+           $(document).ready(function () {
+        // Configuración inicial de Dropify
+        $('.dropify').dropify({
+            messages: {
+                default: 'Arrastra y suelta un archivo aquí o haz clic',
+                replace: 'Arrastra y suelta o haz clic para reemplazar',
+                remove: 'Eliminar',
+                error: 'Se produjo un error al cargar el archivo'
+            },
+            height: 100  // Ajusta la altura según sea necesario
+            // defaultFile: 'URL de la imagen predeterminada si es necesario'
+        });
+
+        // Eventos Dropify
+        var drEvent = $('#input-file-events').dropify();
+
+        // Antes de limpiar Dropify
+        drEvent.on('dropify.beforeClear', function (event, element) {
+            return confirm("¿Realmente quieres eliminar \"" + element.file.name + "\"?");
+        });
+
+        // Después de limpiar Dropify
+        drEvent.on('dropify.afterClear', function (event, element) {
+            alert('Archivo eliminado');
+        });
+
+        // Manejo de errores Dropify
+        drEvent.on('dropify.errors', function (event, element) {
+            console.log('Hubo errores');
+        });
+
+        // Inicializar y destruir Dropify según el botón de alternancia
+        var drDestroy = $('#input-file-to-destroy').dropify().data('dropify');
+        $('#toggleDropify').on('click', function (e) {
+            e.preventDefault();
+            if (drDestroy.isDropified()) {
+                drDestroy.destroy();
+            } else {
+                drDestroy.init();
+            }
+        });
+
+        // Dopdown Tipo de Identificación
+        $('#UserEnt_DocumentType').change(function () {
+            var valorSeleccionado = $(this).val();
+            var $campo = $('#UserEnt_Identification');
+
+            if (valorSeleccionado == "1") {
+                $campo.val('').attr('readonly', false).mask('00-0000-0000');
+            } else if (valorSeleccionado == "2") {
+                $campo.val('').attr('readonly', false).mask('00-0000-0000-0000');
+            } else {
+                $campo.val('').attr('readonly', true).unmask(); // Remover la máscara
+            }
+        });
+    });
+
+
+    // Validación del formulario con Parsley
+        $('#employeeForm').parsley();
+        $('.dropify').dropify();
+        $('#Identification').mask('00-0000-0000-0000');
+        $('#PhoneNumber').mask('0000-0000');
+    // Envío del formulario a través de AJAX
+        $('#employeeForm').submit(function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: formData,
+            processData: false, // No procesar los datos
+            contentType: false,
+            success: function (response) {
+                var responseParts = response.message.split("|");
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: responseParts[0],
+                        icon: responseParts[1],
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '@Url.Action("Index", "Dashboard")';
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: responseParts[0],
+                        icon: responseParts[1],
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al agregar la pregunta.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+        });
+    });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Inicializar Dropify
+            var drEvent = $('.dropify').dropify();
+
+            // Añadir un evento de cambio para la validación del archivo
+            $('#ImgProfile').on('change', function (event) {
+                var file = event.target.files[0];
+                if (file) {
+                    var allowedTypes = ['image/jpeg', 'image/png'];
+                    if (!allowedTypes.includes(file.type)) {
+                        // Mostrar mensaje de error con SweetAlert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Archivo no permitido',
+                            text: 'Solo se permiten archivos JPEG y PNG.',
+                        }).then(() => {
+                            // Vaciar el campo de entrada de archivo
+                            event.target.value = '';
+                            // Resetear Dropify
+                            var drDestroy = $('.dropify').dropify();
+                            drDestroy = drDestroy.data('dropify');
+                            drDestroy.resetPreview();
+                            drDestroy.clearElement();
+                        });
+                    }
+                }
+            });
+
+            // Prevenir la subida del archivo desde Dropify si no es permitido
+            drEvent.on('dropify.errors', function (event, element) {
+                var file = element.file;
+                var allowedTypes = ['image/jpeg', 'image/png'];
+                if (file && !allowedTypes.includes(file.type)) {
+                    // Vaciar el campo de entrada de archivo
+                    element.input.value = '';
+                    // Resetear Dropify
+                    element.resetPreview();
+                    element.clearElement();
+                }
+            });
+        });
+    </script>
+
+}

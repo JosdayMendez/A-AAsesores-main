@@ -1,0 +1,16 @@
+bool userFound = false;
+
+foreach (var item in ViewBag.User)
+{
+    if (item.Text == entidad.UserEnt.Identification.Replace("-", ""))
+    {
+        ClientID = Convert.ToInt32(item.Value);
+        userFound = true;
+        break;
+    }
+}
+
+if (!userFound)
+{
+    ClientID = user.RegisterUser(entidad.UserEnt);
+}

@@ -1,0 +1,164 @@
+﻿<!-- Este estilo debería estar en un archivo SCSS pero no se ha logrado compilar-->
+
+<div class="navbar-custom" style="background-color: #b89531 !important; text-align: center;">
+    <div class="container-fluid">
+        <div id="navigation">
+            <!-- Navigation Menu-->
+
+            @if (Session["UserId"] != null)
+            {
+                if (Session["Role"].ToString().AsInt() == 1)
+                {
+                    <ul class="navigation-menu">
+                        <li class="has-submenu">
+                            <a href="@Url.Action("Index", "Dashboard")">Inicio</a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("ConsultEmployees", "Employee")">Empleados</a>
+                            <ul class="submenu megamenu">
+                                <li>
+                                    <ul>
+                                        @*<li><a href="@Url.Action("LoginEmployee", "Employee")">Iniciar sesión</a></li>*@
+                                        <li><a href="@Url.Action("RegisterEmployee", "Employee")">Agregar Empleado</a></li>
+                                        @*<li><a href="@Url.Action("RecoverPassword", "Users")">Recuperar contraseña</a></li>*@
+                                        <li><a href="@Url.Action("ConsultEmployees", "Employee")">Gestionar Empleados</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("ViewQuotations", "Quotations")">Cotizaciones</a>
+                            <ul class="submenu megamenu">
+                                <li>
+                                    <ul>
+                                        <li><a href="@Url.Action("RegisterQuotation", "Quotations")">Realizar cotización</a></li>
+                                        <li><a href="@Url.Action("ViewQuotations", "Quotations")">Gestionar cotizaciones</a></li>
+                                        @*<li><a href="@Url.Action("UpdateQuotation", "Quotations")">Actualizar cotización</a></li>*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("ViewProperties", "Properties")">Propiedades</a>
+                            <ul class="submenu megamenu">
+                                <li>
+                                    <ul>
+                                        <li><a href="@Url.Action("ViewProperties", "Properties")">Ver propiedades</a></li>
+                                        <li><a href="@Url.Action("AddProperty", "Properties")">Agregar propiedad</a></li>
+                                        @*<li><a href="@Url.Action("UpdateProperty", "Properties")">Actualizar Propiedad</a></li>*@
+                                        @*<li><a href="@Url.Action("ViewProperty", "Properties")">Detallar Propiedad</a></li>*@
+                                        <li><a href="@Url.Action("ListProperties", "Properties")">Gestionar propiedades</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a>Clientes</a>
+                            <ul class="submenu megamenu">
+                                <li>
+                                    <ul>
+                                        <li><a href="@Url.Action("ConsultAppointments", "Appointments")">Citas</a></li>
+                                        <li><a href="@Url.Action("ConsultClients", "Users")">Listado de clientes</a></li>
+                                        <li><a href="@Url.Action("ListContacts", "News")">Solicitudes de contacto</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a>Supervisión</a>
+                            <ul class="submenu megamenu">
+                                <li>
+                                    <ul>
+                                        <li><a href="@Url.Action("AuditVisualization", "AuditLog")">Auditoría</a></li>
+                                        <li><a href="@Url.Action("Home", "Reports")">Reportes</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a>Administración</a>
+                            <ul class="submenu megamenu">
+                                <li>
+                                    <ul>
+                                        <li><a href="@Url.Action("MaintenanceList", "Maintenance")">Mantenimientos</a></li>
+                                        <li><a href="@Url.Action("InformativeBlogAdmin", "News")">Blog Informativo</a></li>
+                                        <li><a href="@Url.Action("PrequalificationAdmin", "Prequalification")"> Precalificacion Bancaria</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
+                else if (Session["Role"].ToString().AsInt() == 2)
+                {
+                    <ul class="navigation-menu">
+                        <li class="has-submenu">
+                            <a href="@Url.Action("Index", "Dashboard")">Inicio</a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("ViewProperties", "Properties")">Propiedades</a>
+                            <ul class="submenu megamenu">
+                                <li>
+                                    <ul>
+                                        <li><a href="@Url.Action("ViewProperties", "Properties")">Ver propiedades</a></li>
+                                        <li><a href="@Url.Action("AddProperty", "Properties")">Agregar propiedad</a></li>
+                                        @*<li><a href="@Url.Action("UpdateProperty", "Properties")">Actualizar Propiedad</a></li>*@
+                                        @*<li><a href="@Url.Action("ViewProperty", "Properties")">Detallar Propiedad</a></li>*@
+                                        <li><a href="@Url.Action("ListProperties", "Properties")">Gestionar propiedades</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("ConsultAppointments", "Appointments")">Mis citas</a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("InformativeBlog", "News")">Blog Informativo</a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("Prequalification", "Prequalification")">Precalificacion Bancaria</a>
+                        </li>
+                    </ul>
+                }
+                else if (Session["Role"].ToString().AsInt() == 3)
+                {
+                    <ul class="navigation-menu">
+                        <li class="has-submenu">
+                            <a href="@Url.Action("Index", "Dashboard")">Inicio</a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("ViewQuotations", "Quotations")">Cotizaciones</a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("InformativeBlog", "News")">Blog Informativo</a>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="@Url.Action("Prequalification", "Prequalification")">Precalificacion Bancaria</a>
+                        </li>
+                    </ul>
+                }
+            }
+            else
+            {
+                <ul class="navigation-menu">
+                    <li class="has-submenu">
+                        <a href="@Url.Action("Index", "Dashboard")">Inicio</a>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="@Url.Action("RegisterQuotation", "Quotations")">Cotizar</a>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="@Url.Action("ViewProperties", "Properties")">Propiedades</a>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="@Url.Action("InformativeBlog", "News")">Blog Informativo</a>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="@Url.Action("Prequalification", "Prequalification")">Precalificacion Bancaria</a>
+                    </li>
+                </ul>
+            }
+            <!-- End navigation menu -->
+        </div> <!-- end #navigation -->
+    </div> <!-- end container -->
+</div> <!-- end navbar-custom -->

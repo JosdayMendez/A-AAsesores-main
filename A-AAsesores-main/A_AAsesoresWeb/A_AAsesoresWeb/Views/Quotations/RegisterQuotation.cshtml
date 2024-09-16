@@ -1,0 +1,224 @@
+﻿@model A_AAsesoresWeb.Entities.QuotationsEnt
+@{
+    ViewBag.Title = "RegisterQuotation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var labelText = "Texto de ejemplo";
+
+}
+
+<div class="container-fluid">
+
+    <div class="row align-items-center">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <div class="d-flex justify-content-start align-items-center my-3">
+                    <div class="mr-2">
+                        <div class="round">
+                            <i class="fa fa-money"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mt-0 mb-0">Realizar Cotizacion</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("RegisterQuotations", "Quotations", FormMethod.Post, new { @class = "bg-white p-5 contact-form", @enctype = "multipart/form-data", id = "employeeForm", data_parsley_validate = "true" }))
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="text-muted m-b-30 font-16" style="color: #000 !important">
+                    Por favor rellene los siguientes datos y estaremos contactando con usted una vez realizada la cotización.
+                    <br> Al enviar esta cotización acepta ser contactado por nuestros asesores.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div class="">
+                    @if (ViewBag.MensajeUsuario != null)
+                    {
+                        <div class="alert alert-danger" role="alert" style="text-align:center">
+                            @ViewBag.MensajeUsuario
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label>Tipo Identificación</label>
+                        @Html.DropDownListFor(m => m.UserEnt.DocumentType, ViewBag.DocumentType as List<SelectListItem>, new { @class = "form-control", @type = "text" })
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Identificación</label>
+                        @Html.TextBoxFor(m => m.UserEnt.Identification, new { @class = "form-control", @onkeyup = "ConsultUserData()", @type = "text", @placeholder = "00-0000-0000", @style = "font-size:14px;", @data_parsley_required = "true", @readonly = "@readonly", @data_parsley_error_message = "Por favor, ingrese el número de identificación." })
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        @Html.TextBoxFor(m => m.UserEnt.Name, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Nombre", @style = "font-size:14px;" })
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="FirstLastName">Primer Apellido</label>
+                        @Html.TextBoxFor(m => m.UserEnt.FirstLastName, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Primer Apellido", @style = "font-size:14px;" })
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Segundo apellido</label>
+                        @Html.TextBoxFor(m => m.UserEnt.SecondLastName, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Segundo Apellido", @style = "font-size:14px;" })
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        @Html.TextBoxFor(m => m.UserEnt.PhoneNumber, new { @class = "form-control", @type = "text", @placeholder = "8888-8888", @style = "font-size:14px;", onkeyup = "agregarGuion(this)", @data_parsley_required = "true", @data_parsley_error_message = "Ingrese el numero telefonico" })
+                        <span class="text-danger" id="UserEnt_PhoneNumber-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección de Correo</label>
+                        @Html.TextBoxFor(m => m.UserEnt.Email, new { @class = "form-control", @type = "email", @placeholder = "example@example.com", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Ingrese el correo electronico" })
+                        <span class="text-danger" id="UserEnt_Email-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Detalles o acabados</label>
+                        @Html.TextAreaFor(m => m.QuoteEnt.Details, new { @class = "form-control", @type = "text", @rows = "5", @placeholder = "Pisos de madera, encimeras de cocina en granito, azulejos en baños, pintura neutra en interiores, grifería moderna, iluminación empotrada, puertas de madera.", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Ingrese los detalles de la cotizacion" })
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="">
+                    <div class="form-group">
+                        <label>Características generales</label>
+                        <div class="row">
+                            @for (int i = 0; i < Model.QuoteRoomEnt.Count; i++)
+                            {
+                                string checkboxId = "customCheck" + (i + 1);
+                                string quantityId = "quantity" + (i + 1);
+                                <div class="col-md-4">
+                                    <div class="checkbox my-2">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="@checkboxId" name="Rooms" data-parsley-mincheck="2" value="@Model.QuoteRoomEnt[i].Id" data-target="@quantityId">
+                                            <input type="hidden" name="RoomNames" value="@Model.QuoteRoomEnt[i].RoomName">
+                                            <label class="custom-control-label" for="@checkboxId">@Model.QuoteRoomEnt[i].RoomName</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="@quantityId" style="display: none;">
+                                        @Html.TextBoxFor(m => m.RoomQuantity, new { @class = "form-control", @type = "number", @placeholder = "1", @style = "font-size:14px;" })
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <br />
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="text-right">
+                    <a class="btn btn-secondary waves-effect m-l-5" href="@Url.Action("Index", "Dashboard")">Cancelar</a>
+                    <button type="submit" class="btn btn-primary waves-light" id="registerButton">Realizar Cotizacion</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@section scripts{
+    <!-- App js -->
+    <!-- jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <!-- Parsley.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js"></script>
+    <script src="~/assets/js/app.js"></script>
+    <script src="~/Utilities/User-Funtions.js"></script>
+    <script src="~/Utilities/RegisterForm-Validation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#employeeForm').parsley();
+            $('#UserEnt_PhoneNumber').mask('0000-0000');
+            // Dopdown Tipo de Identificación
+            $('#UserEnt_DocumentType').change(function () {
+                var valorSeleccionado = $(this).val();
+                var $campo = $('#UserEnt_Identification');
+
+                if (valorSeleccionado == "1") {
+                    $campo.val('').attr('readonly', false).mask('00-0000-0000');
+                } else if (valorSeleccionado == "2") {
+                    $campo.val('').attr('readonly', false).mask('00-0000-0000-0000');
+                } else {
+                    $campo.val('').attr('readonly', false).unmask(); // Remover la máscara
+                }
+            });
+        });
+
+        $('#employeeForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                processData: false, // No procesar los datos
+                contentType: false,
+                success: function (response) {
+                    var responseParts = response.message.split("|");
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: responseParts[0],
+                            icon: responseParts[1],
+                            confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '@Url.Action("RegisterQuotation", "Quotations")';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: responseParts[0],
+                            icon: responseParts[1],
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Ocurrió un error al realizar la cotización. Por favor, inténtelo de nuevo.',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // Obtener todos los checkboxes
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+        // Iterar sobre cada checkbox
+        checkboxes.forEach(function (checkbox) {
+            // Agregar un listener para el evento change
+            checkbox.addEventListener('change', function () {
+                // Obtener el id del input asociado
+                var targetId = this.dataset.target;
+                // Obtener el elemento del input
+                var input = document.getElementById(targetId);
+                // Mostrar u ocultar el input según el estado del checkbox
+                input.style.display = this.checked ? 'block' : 'none';
+
+                // Si el checkbox está marcado, establecer el valor del input en 1
+                if (this.checked) {
+                    input.querySelector('input[type="number"]').value = '1';
+                }
+            });
+        });
+    </script>
+
+}
+

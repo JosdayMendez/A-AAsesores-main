@@ -1,0 +1,185 @@
+﻿@model A_AAsesoresWeb.Entities.MultiEnt
+@{
+    ViewBag.Title = "Queries";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="btn-group pull-right">
+                    <ol class="breadcrumb hide-phone p-0 m-0">
+                        <li class="breadcrumb-item"><a href="#">A&A Asesores</a></li>
+                        <li class="breadcrumb-item"><a href="#">Preguntas Frecuentes</a></li>
+                        <li class="breadcrumb-item active">Contacto</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Consultas</h4>
+            </div>
+        </div>
+    </div>
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    @if (ViewBag.MensajeUsuario != null)
+                    {
+                        <div class="alert alert-danger" role="alert" style="text-align:center">
+                            @ViewBag.MensajeUsuario
+                        </div>
+                    }
+                    @using (Html.BeginForm("RegisterQuerie", "News", FormMethod.Post, new { @class = "bg-white p-5 contact-form", @enctype = "multipart/form-data", id = "employeeForm", data_parsley_validate = "true" }))
+                    {
+                        <p class="text-muted m-b-30 font-16" style="color: #000 !important; text-align: center;">
+                            Por favor rellene los siguientes datos y estaremos contactando con usted una vez completado el formulario.
+                            <br>
+                            Al enviar este formulario acepta ser contactado por nuestros asesores.
+                        </p>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="p-1">
+                                        <div class="form-group">
+                                            <label>Tipo Identificación</label>
+                                            @Html.DropDownListFor(m => m.UserEnt.DocumentType, ViewBag.DocumentType as List<SelectListItem>, new { @class = "form-control", @type = "text" })
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Identificación</label>
+                                            @Html.TextBoxFor(m => m.UserEnt.Identification, new { @class = "form-control", @onkeyup = "ConsultUserData()", @type = "text", @placeholder = "00-0000-0000", @style = "font-size:14px;", @data_parsley_required = "true", @readonly = "@readonly", @data_parsley_error_message = "Por favor, ingrese el número de identificación." })
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nombre</label>
+                                            @Html.TextBoxFor(m => m.UserEnt.Name, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Nombre", @style = "font-size:14px;" })
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="FirstLastName">Primer Apellido</label>
+                                            @Html.TextBoxFor(m => m.UserEnt.FirstLastName, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Primer Apellido", @style = "font-size:14px;" })
+                                            <span class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Segundo apellido</label>
+                                        @Html.TextBoxFor(m => m.UserEnt.SecondLastName, new { @readonly = "@readonly", @class = "form-control", @type = "text", @placeholder = "Segundo Apellido", @style = "font-size:14px;" })
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Teléfono</label>
+                                        @Html.TextBoxFor(m => m.UserEnt.PhoneNumber, new { @class = "form-control", @type = "text", @placeholder = "8888-8888", @style = "font-size:14px;", onkeyup = "agregarGuion(this)", @data_parsley_required = "true", @data_parsley_error_message = "Ingrese el numero telefonico" })
+                                        <span class="text-danger" id="UserEnt_PhoneNumber-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Dirección de Correo</label>
+                                        @Html.TextBoxFor(m => m.UserEnt.Email, new { @class = "form-control", @type = "email", @placeholder = "example@example.com", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Ingrese el correo electronico" })
+                                        <span class="text-danger" id="UserEnt_Email-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Motivo de contacto</label>
+                                        @Html.TextAreaFor(m => m.ContactEnt.Message, new { @class = "form-control", @type = "text", @placeholder = "Escribe el motivo de contacto aquí...", @style = "font-size:14px;", @data_parsley_required = "true", @data_parsley_error_message = "Ingrese el motivo de contacto" })
+                                    </div>
+                                    <br />
+                                    <div class="text-right">
+                                        <a class="btn btn-secondary waves-effect m-l-5" href="javascript:void(0);" onclick="closeTab()">Cancelar</a>
+                                        <button type="submit" class="btn btn-primary waves-light" id="registerButton">Enviar Solicitud de Contacto</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section scripts{
+        <!-- App js -->
+        <!-- jQuery Mask Plugin -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+        <!-- Parsley.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js"></script>
+        <script src="~/assets/js/app.js"></script>
+        <script src="~/Utilities/User-Funtions.js"></script>
+        <script src="~/Utilities/RegisterForm-Validation.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#employeeForm').parsley();
+                $('#UserEnt_PhoneNumber').mask('0000-0000');
+                // Dopdown Tipo de Identificación
+                $('#UserEnt_DocumentType').change(function () {
+                    var valorSeleccionado = $(this).val();
+                    var $campo = $('#UserEnt_Identification');
+
+                    if (valorSeleccionado == "1") {
+                        $campo.val('').attr('readonly', false).mask('00-0000-0000');
+                    } else if (valorSeleccionado == "2") {
+                        $campo.val('').attr('readonly', false).mask('00-0000-0000-0000');
+                    } else {
+                        $campo.val('').attr('readonly', false).unmask(); // Remover la máscara
+                    }
+                });
+            });
+
+            $('#employeeForm').submit(function (event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    processData: false, // No procesar los datos
+                    contentType: false,
+                    success: function (response) {
+                        var responseParts = response.message.split("|");
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: responseParts[0],
+                                icon: responseParts[1],
+                                confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.close();
+                                }
+                            });
+
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: responseParts[0],
+                                icon: responseParts[1],
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Error al realizar la solicitud de contacto.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                });
+            });
+
+
+        </script>
+        <script>
+            function closeTab() {
+                window.close();
+            }
+        </script>
+    }
+
+
+

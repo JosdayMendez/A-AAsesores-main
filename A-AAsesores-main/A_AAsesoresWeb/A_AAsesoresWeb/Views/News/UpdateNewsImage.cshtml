@@ -1,0 +1,130 @@
+﻿@model A_AAsesoresWeb.Entities.NewsEnt
+
+@{
+    ViewBag.Title = "Actualizar Imagen de Noticia";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="container-fluid mb-4">
+    <div class="row justify-content-between align-items-center">
+        <!-- Contenedor del título -->
+        <div class="col-md-6">
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-8 col-lg-6">
+            <div class="card">
+                <div class="d-flex justify-content-center align-items-center my-3">
+                    <div class="text-center mr-2">
+                        <div class="round">
+                            <i class="fa fa-edit"></i>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="mt-0 mb-0">Actualizar Imagen</h3>
+                    </div>
+                </div>
+               
+                <div class="card-body">
+                    @using (Html.BeginForm("UpdateNewsImage", "News", FormMethod.Post, new { enctype = "multipart/form-data", id = "UpdateNewsImageForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="Id" value="@Model.Id" />
+
+                        <div class="form-group">
+                            <label for="imageUpload">Selecciona una nueva imagen:</label>
+                            <div class="custom-file">
+                                <input type="file" id="imageUpload" name="ImageFile" class="custom-file-input" accept="image/*" />
+                                <label class="custom-file-label" for="imageUpload">Elegir archivo</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label>Vista previa:</label>
+                            <br />
+                            <img id="imagePreview" src="@(!string.IsNullOrEmpty(Model.ImageUrl) ? Url.Content(Model.ImageUrl) : "~/Content/Images/placeholder.png")" alt="Vista previa" class="img-fluid" style="max-width: 300px; max-height: 300px;" />
+                        </div>
+
+                        <div class="text-right">
+                            <a href="@Url.Action("InformativeBlogAdmin", "News")" class="btn btn-secondary waves-effect m-l-5" data-toggle="tooltip" data-placement="top" title="Cancelar">Cancelar</a>
+                            <button type="submit" class="btn btn-primary waves-light" data-toggle="tooltip" data-placement="top" title="Actualizar">Actualizar Imagen</button>
+                        </div>
+    
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/assets/js/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Vista previa de la imagen
+            $('#imageUpload').change(function (event) {
+                var input = event.target;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imagePreview').attr('src', e.target.result).show();
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $('#imagePreview').hide();
+                }
+
+                // Mostrar el nombre del archivo en la etiqueta personalizada
+                var fileName = input.files[0].name;
+                $(this).next('.custom-file-label').html(fileName);
+            });
+
+            // Enviar formulario con AJAX y mostrar mensajes en modales
+            $("#UpdateNewsImageForm").submit(function (event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var message = response.message;
+                        var messageType = response.success ? 'success' : 'error';
+                        Swal.fire({
+                            title: messageType == "success" ? 'Éxito' : 'Error',
+                            text: message,
+                            icon: messageType,
+                            confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                            if (result.isConfirmed && response.success) {
+                                window.location.href = '@Url.Action("InformativeBlogAdmin", "News")';
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Error al actualizar la imagen.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

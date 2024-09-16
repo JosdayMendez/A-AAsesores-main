@@ -1,0 +1,325 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/assets/plugins/morris/morris.css" rel="stylesheet">
+<link href="~/assets/css/chat.css" rel="stylesheet" />
+<link href="~/assets/css/home.css" rel="stylesheet" />
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    .hero {
+        position: relative;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-color: #00204a;
+    }
+
+        .hero.overlay {
+            position: relative;
+        }
+
+            .hero.overlay:before {
+                background-color: rgba(0, 0, 0, 0.5);
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                top: 0;
+                z-index: 1;
+            }
+
+        .hero,
+        .hero > .container > .row {
+            height: auto;
+            min-height: 300px;
+        }
+
+            .hero > .container {
+                position: relative;
+                z-index: 2;
+            }
+
+            .hero .heading {
+                color: #fff;
+                font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+                margin-bottom: 30px;
+                font-weight: 600;
+            }
+
+            .hero .lead {
+                color: #fff;
+                font-size: 14px;
+                margin-bottom: 30px;
+            }
+
+            .hero .narrow-w {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .hero .form-search .form-control {
+                padding-top: 18px;
+                padding-bottom: 18px;
+                padding-left: 20px;
+                padding-right: 20px;
+                border: none;
+                border-radius: 30px;
+            }
+
+                .hero .form-search .form-control:hover,
+                .hero .form-search .form-control:focus {
+                    outline: none;
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                }
+
+            .hero .form-search .form-control {
+                margin-right: 10px;
+            }
+
+            .hero .form-search .btn {
+                background-color: #005555;
+                padding-left: 30px;
+                padding-right: 30px;
+                color: #fff;
+            }
+
+                .hero .form-search .btn:hover,
+                .hero .form-search .btn:focus {
+                    outline: none;
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                }
+
+    .img-about img {
+        position: relative;
+        z-index: 2;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .img-about.dots {
+        position: relative;
+    }
+
+        .img-about.dots:after {
+            position: absolute;
+            z-index: 1;
+            bottom: -50px;
+            right: -70px;
+            content: "";
+            width: 412px;
+            height: 220px;
+            background: url("/assets/images/dots.png") no-repeat;
+        }
+
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+
+        <div class="hero page-inner overlay" style="background-image: url('/assets/images/hero_bg_3.jpg'); position: relative;">
+            <div class="container">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-lg-9 text-center mt-5">
+                        <h1 style="color: white;">A&A Asesores Inmobiliarios</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <body>
+        <script>
+            window.addEventListener('mouseover', initLandbot, { once: true });
+            window.addEventListener('touchstart', initLandbot, { once: true });
+            var myLandbot;
+            function initLandbot() {
+                if (!myLandbot) {
+                    var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
+                    s.addEventListener('load', function () {
+                        var myLandbot = new Landbot.Livechat({
+                            configUrl: 'https://storage.googleapis.com/landbot.online/v3/H-2521414-TQZEDEUMWSQH64PH/index.json',
+                        });
+                    });
+                    s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.js';
+                    var x = document.getElementsByTagName('script')[0];
+                    x.parentNode.insertBefore(s, x);
+                }
+            }
+        </script>
+    </body>
+
+
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-9 text-center mt-5">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="text-center mr-2">
+                            <div class="round">
+                                <i class="fa fa-home"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h5 class="mt-0 round-inner mb-0">Propiedades</h5>
+                        </div>
+                    </div>
+
+                    <p class="mb-3 mt-3 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+                    <div class="text-center">
+                        <a href="@Url.Action("ViewProperties", "Properties")" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Mostrar más">
+                            <i class="fa fa-plus-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repite el mismo patrón para los otros elementos -->
+        <!-- Elemento 2 -->
+        <div class="col-md-6 col-lg-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="text-center mr-2">
+                            <div class="round">
+                                <i class="fa fa-calendar-check-o"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h5 class="mt-0 round-inner mb-0">Citas</h5>
+                        </div>
+                    </div>
+
+                    <p class="mb-3 mt-3 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+                    <div class="text-center">
+                        <a href="@Url.Action("AddAppoinment", "Appointments")" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Mostrar más">
+                            <i class="fa fa-plus-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Elemento 3 -->
+        <div class="col-md-6 col-lg-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="text-center mr-2">
+                            <div class="round">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h5 class="mt-0 round-inner mb-0">Precalificación</h5>
+                        </div>
+                    </div>
+
+                    <p class="mb-3 mt-3 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+                    <div class="text-center">
+                        <a href="@Url.Action("Prequalification", "Prequalification")" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Mostrar más">
+                            <i class="fa fa-plus-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Elemento 4 -->
+        <div class="col-md-6 col-lg-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="text-center mr-2">
+                            <div class="round">
+                                <i class="fa fa-money"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h5 class="mt-0 round-inner mb-0">Cotizaciones</h5>
+                        </div>
+                    </div>
+
+                    <p class="mb-3 mt-3 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+                    <div class="text-center">
+                        <a href="@Url.Action("RegisterQuotation", "Quotations")" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Mostrar más">
+                            <i class="fa fa-plus-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-10 col-xl-8" style="max-width: 100%;">
+            <div class="card bg-white m-b-30 h-100">
+                <div class="card-body new-user h-100 d-flex flex-column justify-content-between" style="height: 100%; overflow-y: auto;">
+                    <div class="text-center">
+                        <h3><i class="fa fa-info-circle text-primary"></i> Sobre Nosotros</h3>
+                        <hr>
+                        <h6 class="text-lightdark text-left">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce a volutpat sapien, non condimentum lacus. Vestibulum commodo metus quis massa sodales viverra eget eu dui. Vestibulum suscipit pretium varius. Ut et lobortis eros. Curabitur varius lorem orci, in gravida nibh feugiat et. Nulla interdum sed risus a luctus. Morbi et dapibus lectus. Etiam cursus mi quis eros condimentum ornare.
+                        </h6>
+                        <hr>
+                        <h6 class="text-lightdark text-left">
+                            Phasellus tempus blandit ornare. Donec quis lacus pharetra, pellentesque libero quis, cursus mauris. Vestibulum malesuada quis tortor at efficitur. Phasellus sed dolor velit. Ut nibh nulla, convallis at enim ac, cursus interdum dui. Aenean pharetra quis mauris nec scelerisque. Sed sed dolor finibus, dignissim augue dignissim, bibendum velit. Donec iaculis elit quis magna gravida ultrices. Vestibulum justo nulla, sollicitudin quis sapien ac, commodo suscipit ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In commodo sapien ut tincidunt placerat. Proin porttitor risus ut ex ornare, vel feugiat lectus dictum. Sed sed augue mi. Praesent convallis et ipsum a sagittis. Etiam aliquam varius felis, ac vestibulum enim egestas in.
+                        </h6>
+                        <hr>
+                        <h6 class="text-lightdark text-left">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce a volutpat sapien, non condimentum lacus. Vestibulum commodo metus quis massa sodales viverra eget eu dui. Vestibulum suscipit pretium varius. Ut et lobortis eros. Curabitur varius lorem orci, in gravida nibh feugiat et. Nulla interdum sed risus a luctus. Morbi et dapibus lectus. Etiam cursus mi quis eros condimentum ornare.
+                        </h6>
+                    </div>
+                    <div class="text-muted text-right"><small>Marzo 2024</small></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 order-lg-4 d-flex align-items-center">
+            <div class="img-about dots">
+                <img src="~/assets/images/img_1.jpg" alt="Image" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/assets/js/app.js"></script>
+    <script src="~/Utilities/chat.js"></script>
+    <script src="~/Utilities/responses.js"></script>
+    <script>
+        // Tooltip initialization
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

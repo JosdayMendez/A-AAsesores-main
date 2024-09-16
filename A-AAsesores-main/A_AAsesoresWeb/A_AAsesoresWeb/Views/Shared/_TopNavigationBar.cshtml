@@ -1,0 +1,80 @@
+﻿<div class="topbar-main">
+
+    <!-- Logo container-->
+    <div class="logo">
+        <!-- Text Logo -->
+        <!--</a>-->
+        <!-- Image Logo -->
+        <div class="logo">
+            <!-- Image Logo for large screens -->
+            <a href="@Url.Action("Index", "Dashboard")" class="logo d-none d-sm-block">
+                <!-- Oculta el enlace en pantallas extra pequeñas (menos de 576px) -->
+                <img src="~/assets/images/logo.png" alt="" height="45" class="logo-large">
+                <img src="~/assets/images/A&A Asesores.png" alt="" height="30" class="logo-large"> <!-- Añade margen a la imagen pequeña para separarlas un poco en pantallas grandes -->
+            </a>
+            <!-- Image Logo for small screens -->
+            <a href="@Url.Action("Index", "Dashboard")" class="logo d-block ">
+                <!-- Oculta el enlace en pantallas pequeñas y más grandes -->
+                <img src="~/assets/images/logo.png" alt="" height="50" class="logo-small">
+            </a>
+        </div>
+
+    </div>
+    <!-- End Logo container-->
+
+    <div class="menu-extras topbar-custom">
+
+        <ul class="list-inline float-right mb-0">
+
+            <!-- User-->
+            @if (Session["UserId"] != null)
+            {
+                <li class="list-inline-item dropdown notification-list">
+                    <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="false" aria-expanded="false">
+                        <span class="mr-2">@Session["EmployeeConnect"]</span>
+                        <img src="@Session["EmployeeImage"]" alt="user" class="rounded-circle">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown dropdown-menu-lg">
+                        <!-- item-->
+                        <div class="dropdown-item noti-title text-center">
+                            <h5 class="m-0">Bienvenido</h5>
+                        </div>
+                        <a class="dropdown-item" href="@Url.Action("ProfileEmployee","Employee")">
+                            <i class="fa fa-user"></i>
+                            Perfil
+                        </a>
+                        <a class="dropdown-item" href="@Url.Action("ChangePassword","Employee")"><i class="fa fa-solid fa-key"></i> Cambiar contraseña</a>
+                        @*<a class="dropdown-item" href="#"><span class="badge badge-success float-right">5</span><i class="mdi mdi-settings m-r-5 text-muted"></i> Settings</a>
+                            <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline m-r-5 text-muted"></i> Lock screen</a>*@
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="@Url.Action("LogOut","Employee")">
+                            <i class="fa fa-sign-out"></i>
+                            Cerrar Sesión
+                        </a>
+                    </div>
+                </li>
+
+            }
+
+            <li class="menu-item list-inline-item">
+                <!-- Mobile menu toggle-->
+                <a class="navbar-toggle nav-link">
+                    <div class="lines">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+                <!-- End mobile menu toggle-->
+            </li>
+
+        </ul>
+
+    </div>
+    <!-- end menu-extras -->
+
+    <div class="clearfix"></div>
+
+
+</div>

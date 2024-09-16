@@ -1,0 +1,149 @@
+﻿@model A_AAsesoresWeb.Entities.NewsEnt
+
+@{
+    ViewBag.Title = "Actualizar Pregunta Frecuente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["notification"] != null)
+{
+    <div class="alert alert-@(TempData["notificationType"])">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        @TempData["notification"]
+    </div>
+}
+
+<div class="container-fluid">
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group pull-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Blog Informativo</a></li>
+                            <li class="breadcrumb-item active">Actualizar</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card mx-auto m-b-30">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center my-3">
+                        <div class="text-center mr-2">
+                            <div class="round">
+                                <i class="fa fa-edit"></i>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mt-0 mb-0">Actualizar Noticia</h3>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("UpdateInformativeBlog", "News", FormMethod.Post, new { @class = "bg-white p-5 contact-form", @enctype = "multipart/form-data", id = "FrequentQuestionsForm" }))
+                    {
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.HiddenFor(m => m.EmployeeId)
+
+                        <div class="form-group">
+                            <label for="NewsEnt_Title">Título de la Noticia</label>
+                            @Html.TextAreaFor(m => m.Title, new { @class = "form-control", @rows = "2", @placeholder = "Ingrese el título de la pregunta", id = "NewsEnt_Title" })
+                            <span class="text-danger" id="NewsEnt_Title-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NewsEnt_Description">Descripcion de la Noticia</label>
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @rows = "5", @placeholder = "Ingrese la respuesta de la pregunta", id = "NewsEnt_Description" })
+                            <span class="text-danger" id="NewsEnt_Description-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NewsEnt_Title">Enlace de la noticia</label>
+                            @Html.TextAreaFor(m => m.Url, new { @class = "form-control", @rows = "2", @placeholder = "", id = "NewsEnt_Title" })
+                            <span class="text-danger" id="NewsEnt_Title-error"></span>
+                        </div>
+
+                        <div class="text-right">
+                            <a href="@Url.Action("InformativeBlogAdmin", "News")" class="btn btn-secondary waves-effect m-l-5" data-toggle="tooltip" data-placement="top" title="Cancelar">Cancelar</a>
+                            <button type="submit" class="btn btn-primary waves-light" data-toggle="tooltip" data-placement="top" title="Actualizar" id="updateButton">Actualizar noticia</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div> <!-- end row -->
+</div> <!-- end container -->
+
+@section scripts {
+    <script src="~/assets/js/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#FrequentQuestionsForm').parsley();
+
+            // Función para mostrar la vista previa de la imagen
+            $('#imageFile').change(function (event) {
+                var input = event.target;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#previewImage').attr('src', e.target.result).show();
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $('#previewImage').hide();
+                }
+            });
+
+            $("#FrequentQuestionsForm").submit(function (event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var responseParts = response.message.split("|");
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: responseParts[0],
+                                icon: responseParts[1],
+                                confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '@Url.Action("InformativeBlogAdmin", "News")';
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: responseParts[0],
+                                icon: responseParts[1],
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Error al actualizar la Noticia.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

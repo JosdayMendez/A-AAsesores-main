@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualización de estado de cita.</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #F7F9FA;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #FFF;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #000;
+            font-weight: bold;
+        }
+
+        strong {
+            font-size: 20px;
+        }
+
+        .header-footer {
+            background-color: #ffcc00;
+            color: #000;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+            .header-footer strong {
+                color: #000;
+            }
+
+        .details-container {
+            margin-top: 20px;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .footer {
+            padding: 48px 24px 0 24px;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.4;
+            color: #6A6F73;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-footer">
+        <strong>A&amp;A Asesores Inmobiliarios</strong>
+    </div>
+    <div class="details-container">
+        <table>
+            <tr>
+                <td class="content">
+                    <p>Hola @@ClientName:</p>
+                    <p>
+
+                        Le informamos que cita del dia @@AppointmentDate en la propiedad @@PropertyName fue @@Status cualquier duda o comentario no dude en contactarnos.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="content">
+                    <p style="margin-bottom:0">
+                        Si no has sido tú quien ha enviado la solicitud, ponte en contacto con el servicio de asistencia.
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="header-footer">
+        <strong>A&amp;A Asesores Inmobiliarios</strong>
+    </div>
+</body>
+</html>
